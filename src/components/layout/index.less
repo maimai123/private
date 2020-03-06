@@ -1,0 +1,130 @@
+.header {
+  position: fixed;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  color: white;
+  background: #373d41;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    font-size: 22px;
+    color: white;
+
+    img {
+      width: 66px;
+      margin: 0 10px 0 20px;
+    }
+  }
+
+  &-nav {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    line-height: 50px;
+
+    .el-dropdown-link {
+      margin-right: 10px;
+      outline: none;
+    }
+
+    &__avatar {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      border-radius: 50%;
+    }
+
+    &__name {
+      margin-right: 10px;
+    }
+
+    &-item {
+      padding: 0 25px;
+      color: white;
+      cursor: pointer;
+
+      &:hover {
+        color: white;
+        background: #4181b9;
+      }
+    }
+
+    .el-dropdown {
+      span {
+        display: flex;
+        align-items: center;
+        margin-right: 30px;
+        color: white;
+      }
+    }
+  }
+
+}
+
+.layout {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+
+  &-menu {
+    position: fixed;
+    top: 50px;
+    bottom: 0;
+    z-index: 102;
+    width: 200px;
+    overflow-x: hidden;
+    text-align: left;
+    background: #3a3f42;
+
+    .el-submenu__title {
+      height: 46px;
+      line-height: 46px;
+    }
+
+    .el-menu-item:hover,
+    .el-submenu .el-submenu__title:hover {
+      background: lighten(#3a3f42, 10%);
+    }
+
+    .el-menu-item,
+    .el-submenu .el-menu-item {
+      height: 40px;
+      line-height: 40px;
+      color: #fff;
+    }
+
+    .el-menu-item.is-active {
+      color: #ffd04b;
+      background: #355f84;
+    }
+
+    .el-submenu .el-menu {
+      background: darken(#3a3f42, 5%);
+    }
+  }
+
+  &-main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    margin-left: 200px;
+    overflow: hidden;
+    overflow-y: auto;
+    background: #f0f2f5;
+  }
+
+  .el-menu--dark {
+    background: #3d464d;
+  }
+}
