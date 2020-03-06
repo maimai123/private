@@ -12,27 +12,25 @@
     </header>
     <section class="layout">
       <el-menu
-        default-active="2"
         class="layout-menu"
-        @open="handleOpen"
-        @close="handleClose"
         @select="onSelect"
         text-color="#fff"
+        :default-active="active"
       >
         <template v-for="item of sidebar">
-          <template v-if="item.sub">
+          <template v-if="item.sub && access[item.access]">
             <el-submenu :index="item.name" :key="item.name">
               <span slot="title">{{ item.item }}</span>
               <el-menu-item
-                :key="sub.name"
-                v-for="sub of item.sub"
+                :key="`${sub.name}-${index}`"
+                v-for="(sub, index) of item.sub"
                 :index="sub.name"
               >
                 {{ sub.item }}
               </el-menu-item>
             </el-submenu>
           </template>
-          <el-menu-item v-else-if="access[item.access] || item.name == 'home'" :key="item.name" :class="{ line: item.line }" :index="item.name">{{ item.item }}</el-menu-item>
+          <el-menu-item v-else-if="access[item.access]" :key="item.name" :class="{ line: item.line }" :index="item.name">{{ item.item }}</el-menu-item>
         </template>
       </el-menu>
       <router-view id="main" class="layout-main"></router-view>
@@ -46,17 +44,15 @@ import { createNamespacedHelpers } from 'vuex'
 const { mapState, mapActions } = createNamespacedHelpers('user')
 
 export default {
-  asyncData ({ store, route }) {
-    return store.dispatch('user/GET_ACCESS')
-  },
-
   data () {
     return {
       sidebar: [
-        { item: '首页', name: 'home' },
+        { item: '首页', name: 'home', access: 'MENU_HOME' },
+        { item: '用户管理', name: 'users', access: 'MENU_USERS' },
         {
           item: 'about',
           name: 'about',
+          access: 'MENU_ABOUT',
           sub: [
             { item: '名字', name: 'about' }
           ]
@@ -66,28 +62,35 @@ export default {
     };
   },
 
+  mounted () {
+    this.GET_ACCESS();
+  },
+
   computed: {
-    ...mapState(['user', 'access'])
+    ...mapState(['user', 'access']),
+
+    active () {
+      let active = this.$route.name;
+      // active = this.$route.matched.reduceRight((preValue, item, index, array) => {
+      //   return item.meta.sidebar || preValue;
+      // }, active);
+      // if (active === this.$route.name) {
+      //   active = Object.keys(this.alias).reduceRight((preValue, key) => {
+      //     const item = this.alias[key];
+      //     if (item.name === this.$route.name && item.params.alias === this.$route.params.alias) {
+      //       return key;
+      //     }
+      //     return preValue;
+      //   }, active);
+      // }
+      return active;
+    }
   },
 
   methods: {
-    ...mapActions(['LOGIN_OUT']),
-    /**
-     * 检查是否需要显示:
-     * @param { Object } item 父级的菜单信息
-     * @param { Object } sub 当前的子菜单
-     * @return { Boolean }
-     */
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath);
-    },
-
-    handleClose (key, keyPath) {
-      console.log(key, keyPath);
-    },
+    ...mapActions(['GET_ACCESS', 'LOGIN_OUT']),
 
     onSelect (name) {
-      console.log(this.$router);
       this.$router.push({ name });
     },
 

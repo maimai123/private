@@ -1,23 +1,28 @@
 <template>
   <div class="login">
-    <el-form
-      @submit.native.prevent="submit"
-      :model="data"
-      :rules="rules"
-      ref="login"
-      label-width="70px"
-      class="login-form"
-    >
-      <el-form-item label="手机号" prop="phone">
-        <el-input v-model="data.phone"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="data.password"></el-input>
-      </el-form-item>
-      <el-form-item class="login-operate">
-        <el-button :loading="lock" native-type="submit" type="primary">登陆</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="login-form">
+      <div class="login-form__title">人脉圈后台管理系统</div>
+      <el-form
+        @submit.native.prevent="submit"
+        :model="data"
+        :rules="rules"
+        ref="login"
+        label-width="70px"
+      >
+        <el-form-item label="账号" prop="phone">
+          <el-input v-model="data.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="data.password"></el-input>
+        </el-form-item>
+        <el-form-item class="login-operate">
+          <div class="login-forget">
+            <router-link :to="{ name: 'forget' }">忘记密码？</router-link>
+          </div>
+          <el-button :loading="lock" native-type="submit" type="primary">登陆</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>
@@ -89,26 +94,30 @@ export default {
   background: #f0f2f5;
   background-image: url('~@/assets/bg.svg');
 
-  &__title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5% 20px 20px 20px;
-    font-size: 30px;
-    text-align: center;
-
-    img {
-      padding: 5px;
-      margin-right: 10px;
-      background: #333;
-      border-radius: 5px;
-    }
-  }
-
   &-form {
     position: absolute;
     top: 200px;
-    width: 350px;
+    width: 450px;
+    padding: 16px;
+    border: 1px solid #a7b5c1;
+
+    &__title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px 20px 20px;
+      font-size: 30px;
+      text-align: center;
+    }
+  }
+
+  &-forget {
+    text-align: right;
+
+    span {
+      color: #3f9eff;
+      cursor: pointer;
+    }
   }
 
   &-operate {
