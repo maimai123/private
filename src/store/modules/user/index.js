@@ -16,6 +16,7 @@ export default {
         // }).catch((err) => {
         //   reject(err);
         // });
+        resolve();
         commit('GET_USER', {
           name: '麦麦',
           avatar: 'https://avatars3.githubusercontent.com/u/15125340?s=60&v=4'
@@ -30,22 +31,27 @@ export default {
         // }).catch((err) => {
         //   reject(err);
         // });
+        resolve();
         commit('GET_ACCESS', {
           MENU_HOME: 1,
           MENU_USERS: 1,
-          MENU_ABOUT: 1
+          MENU_ABOUT: 1,
+          MENU_DEMAND: 1,
+          MENU_TAGS: 1
         });
       });
     },
     LOGIN ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        api.login(data).then((res) => {
-          commit('GET_USER', res.data);
-          resolve(res.data);
-        }).catch((err) => {
-          commit('LOGIN_OUT');
-          reject(err);
-        });
+        // api.login(data).then((res) => {
+        //   commit('GET_USER', res.data);
+        //   resolve(res.data);
+        // }).catch((err) => {
+        //   commit('LOGIN_OUT');
+        //   reject(err);
+        // });
+        resolve();
+        commit('GET_USER', { status: true });
       });
     },
     LOGIN_OUT ({ commit }, data) {

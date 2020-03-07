@@ -1,7 +1,7 @@
 
 <template>
   <div class="users">
-    <grid title="用户列表">
+    <grid title="用户管理">
       <!-- 搜索 -->
       <div class="users__search">
         <el-input
@@ -66,15 +66,6 @@ import { createNamespacedHelpers } from 'vuex';
 const { mapState, mapActions } = createNamespacedHelpers('users');
 
 export default {
-  asyncData ({ store, route }) {
-    console.log(111);
-    return store.dispatch('users/FETCH', {
-      limit: 20,
-      page: 1,
-      p: route.query.q
-    });
-  },
-
   data () {
     return {
       searchInput: '',

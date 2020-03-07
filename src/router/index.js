@@ -1,15 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeRoute from './route/home'
-import AboutRoute from './route/about'
-import UserRoute from './route/users'
+import UserRoute from './route/user'
+import UsersRoute from './route/users'
+import DemandRoute from './route/demand'
+import TagsRoute from './route/tags'
 
 Vue.use(VueRouter)
 
 const routes = [
   ...HomeRoute,
-  ...AboutRoute,
   ...UserRoute,
+  ...UsersRoute,
+  ...DemandRoute,
+  ...TagsRoute,
   {
     path: '/',
     name: 'index',

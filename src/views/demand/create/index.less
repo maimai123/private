@@ -1,0 +1,39 @@
+.demand-create {
+  &__form {
+    width: 100%;
+  }
+
+  .flex {
+    display: flex;
+
+    > div {
+      margin-right: 5px;
+    }
+  }
+
+  .title {
+    margin: 0 0 20px 20px;
+    font-weight: 500;
+    text-align: left;
+
+    span {
+      color: #b5afaf;
+    }
+  }
+
+  .tip {
+    line-height: 2;
+    color: #b5afaf;
+  }
+
+  .item-content,
+  .operate-btns {
+    text-align: left;
+  }
+
+  .is-error {
+    .tip {
+      display: none;
+    }
+  }
+}

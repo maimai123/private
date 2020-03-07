@@ -5,9 +5,17 @@
         <span>系统后台</span>
       </div>
       <nav class="header-nav">
-        <img class="header-nav__avatar" :src="user.avatar">
-        <span class="header-nav__name">{{ user.name }}</span>
-        <span class="header-nav-item" @click="onLogout">退出</span>
+        <el-dropdown>
+          <span class="el-dropdown-link">
+            <img class="header-nav__avatar" :src="user.avatar">
+            <span class="header-nav__name">{{ user.name }}</span>
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <router-link :to="{ name: 'reset' }"><el-dropdown-item>修改密码</el-dropdown-item></router-link>
+            <el-dropdown-item @click="onLogout">退出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </nav>
     </header>
     <section class="layout">
@@ -49,14 +57,16 @@ export default {
       sidebar: [
         { item: '首页', name: 'home', access: 'MENU_HOME' },
         { item: '用户管理', name: 'users', access: 'MENU_USERS' },
-        {
-          item: 'about',
-          name: 'about',
-          access: 'MENU_ABOUT',
-          sub: [
-            { item: '名字', name: 'about' }
-          ]
-        }
+        { item: '需求管理', name: 'demand', access: 'MENU_DEMAND' },
+        { item: '标签管理', name: 'tags', access: 'MENU_TAGS' }
+        // {
+        //   item: 'about',
+        //   name: 'about',
+        //   access: 'MENU_ABOUT',
+        //   sub: [
+        //     { item: '名字', name: 'about' }
+        //   ]
+        // }
         // { item: '定时任务', name: 'cron', access: 'MENU_CRON' },
       ]
     };
@@ -70,25 +80,18 @@ export default {
     ...mapState(['user', 'access']),
 
     active () {
-      let active = this.$route.name;
-      // active = this.$route.matched.reduceRight((preValue, item, index, array) => {
-      //   return item.meta.sidebar || preValue;
-      // }, active);
-      // if (active === this.$route.name) {
-      //   active = Object.keys(this.alias).reduceRight((preValue, key) => {
-      //     const item = this.alias[key];
-      //     if (item.name === this.$route.name && item.params.alias === this.$route.params.alias) {
-      //       return key;
-      //     }
-      //     return preValue;
-      //   }, active);
-      // }
+      const { name, meta } = this.$route;
+      const { sidebar = '' } = meta;
+      let active = name;
+      active = this.$route.matched.reduceRight((preValue, item, index, array) => {
+        return sidebar || preValue;
+      }, active);
       return active;
     }
   },
 
   methods: {
-    ...mapActions(['GET_ACCESS', 'LOGIN_OUT']),
+    ...mapActions(['GET_USER', 'GET_ACCESS', 'LOGIN_OUT']),
 
     onSelect (name) {
       this.$router.push({ name });
