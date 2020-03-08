@@ -1,4 +1,26 @@
 .demand-create {
+  &__info {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    text-align: left;
+
+    > div {
+      width: 30%;
+      padding: 5px 0;
+      font-weight: 500;
+    }
+
+    .pass {
+      color: #3ba90f;
+    }
+
+    .refused {
+      color: #af0e0e;
+    }
+  }
+
   &__form {
     width: 100%;
   }
@@ -22,6 +44,7 @@
   }
 
   .tip {
+    font-size: 12px;
     line-height: 2;
     color: #b5afaf;
   }
@@ -31,9 +54,9 @@
     text-align: left;
   }
 
-  .is-error {
-    .tip {
-      display: none;
+  .operate-btns {
+    .el-button {
+      width: 120px;
     }
   }
 }

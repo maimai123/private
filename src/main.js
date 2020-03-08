@@ -11,7 +11,7 @@ import '@/less/main.less';
 
 import { AUTH_URL } from '@/config';
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, { size: 'small' });
 Vue.component(grid.name, grid)
 
 Vue.config.productionTip = false

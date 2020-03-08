@@ -4,8 +4,8 @@ import { http } from '@/api';
  * 用户列表
  * @param Object limit, page, q
  */
-export const fetch = ({ limit, page, q }) => {
-  return http.get('user/list', { params: { limit, page, q } });
+export const fetch = (params) => {
+  return http.get('operation/customer/index', { params });
 };
 
 /**

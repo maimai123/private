@@ -35,9 +35,10 @@ export default {
         commit('GET_ACCESS', {
           MENU_HOME: 1,
           MENU_USERS: 1,
-          MENU_ABOUT: 1,
+          MENU_ORDER: 1,
           MENU_DEMAND: 1,
-          MENU_TAGS: 1
+          MENU_TAGS: 1,
+          MENU_TOURISTS: 1
         });
       });
     },

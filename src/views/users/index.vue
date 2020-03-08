@@ -3,41 +3,45 @@
   <div class="users">
     <grid title="用户管理">
       <!-- 搜索 -->
-      <div class="users__search">
+      <div class="users-search">
+        <el-select v-model="form.type" clearable placeholder="用户类型" @change="fetch(1)">
+          <el-option
+            v-for="item in TYPE_LIST"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
         <el-input
-          placeholder="请输入用户名或ID"
+          placeholder="请输入微信昵称"
           class="search__input"
           auto-complete="off"
           @keyup.enter.native="fetch(1)"
-          v-model="searchInput">
-          <el-button slot="append" @click="fetch(1)">
-            <i class="el-icon-search"></i>
-          </el-button>
+          clearable
+          v-model="form.name">
         </el-input>
+        <el-button type="primary" @click="fetch(1)">搜索</el-button>
       </div>
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe>
-        <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
-        <el-table-column prop="nick" label="微信昵称" width="100"></el-table-column>
-        <el-table-column prop="type" label="类型" width="100"></el-table-column>
-        <el-table-column prop="avatar" label="用户" width="300">
+        <el-table-column prop="name" label="微信昵称"></el-table-column>
+        <el-table-column prop="type" label="类型" width="100">
           <template slot-scope="scope">
-            <router-link tag="div" :to="{ name: 'admin-manage-detail', params: { id: scope.row.user.id } }" class="prize-item__user">
-              <img :src="scope.row.user.avatar" alt="">
-              <div>
-                <span>{{ scope.row.user.name }}</span>
-              </div>
+            <span>{{ scope.row.type === 1 ? '会员' : '游客' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="recommend_times" label="推荐次数"></el-table-column>
+        <el-table-column prop="rest_recommend_times" label="剩余推荐次数"></el-table-column>
+        <el-table-column prop="be_invite_times" label="被邀请合作次数"></el-table-column>
+        <el-table-column prop="invite_times" label="主动邀请合作次数"></el-table-column>
+        <el-table-column prop="success_times" label="成功合作次数"></el-table-column>
+        <el-table-column prop="type" label="操作">
+          <template slot-scope="scope">
+            <router-link :to="{ name: 'demand', query: { name: scope.row.name } }">
+              <el-button size="small" type="text">
+                查看需求
+              </el-button>
             </router-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="user" label="手机号">
-          <template slot-scope="scope">
-            <span>{{ scope.row.user.phone }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="user" label="最后登录时间 ">
-          <template slot-scope="scope">
-            <span>{{ scope.row.user.timeActive }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -60,7 +64,7 @@
   author: 麦麦
   version：v1.0.0
 */
-
+import { TYPE_LIST } from './constants';
 import { createNamespacedHelpers } from 'vuex';
 
 const { mapState, mapActions } = createNamespacedHelpers('users');
@@ -68,13 +72,17 @@ const { mapState, mapActions } = createNamespacedHelpers('users');
 export default {
   data () {
     return {
-      searchInput: '',
-      current: 1
+      form: {
+        name: '',
+        type: ''
+      },
+      current: 1,
+      TYPE_LIST
     };
   },
 
   mounted () {
-    // this.fetch(1);
+    this.fetch(1);
   },
 
   computed: {
@@ -86,16 +94,12 @@ export default {
 
     fetch (page) {
       this.current = page;
-      const param = {
+      const params = {
         limit: 20,
         page,
-        q: this.searchInput
+        ...this.form
       };
-      this.FETCH(param);
-    },
-
-    changeFilter (flag) {
-      this.fetch(1);
+      this.FETCH(params);
     }
   }
 };

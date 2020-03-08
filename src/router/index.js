@@ -4,7 +4,9 @@ import HomeRoute from './route/home'
 import UserRoute from './route/user'
 import UsersRoute from './route/users'
 import DemandRoute from './route/demand'
+import OrderRoute from './route/order'
 import TagsRoute from './route/tags'
+import TouristsRoute from './route/tourists'
 
 Vue.use(VueRouter)
 
@@ -13,7 +15,9 @@ const routes = [
   ...UserRoute,
   ...UsersRoute,
   ...DemandRoute,
+  ...OrderRoute,
   ...TagsRoute,
+  ...TouristsRoute,
   {
     path: '/',
     name: 'index',

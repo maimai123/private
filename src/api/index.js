@@ -12,9 +12,7 @@ const onResponse = (res) => {
   return Promise.resolve(res);
 };
 const onResponseError = (err) => {
-  console.log(err.response);
   if (!err.response) {
-    // network error
     MessageBox({
       message: '请检查你的网络，点击确定刷新页面。',
       title: '未知错误',

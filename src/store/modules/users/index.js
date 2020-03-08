@@ -7,9 +7,9 @@ export default {
     count: 0
   }),
   actions: {
-    FETCH ({ commit }, { limit, page, q }) {
+    FETCH ({ commit }, params) {
       return new Promise((resolve, reject) => {
-        api.fetch({ limit, page, q }).then((res) => {
+        api.fetch(params).then((res) => {
           commit('FETCH', res.data);
           resolve(res.data);
         }).catch((err) => {
@@ -24,7 +24,7 @@ export default {
   mutations: {
     FETCH (state, data) {
       state.list = data.data;
-      state.count = data.extra.count;
+      state.count = data.total || 0;
     }
   }
 };

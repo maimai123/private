@@ -3,38 +3,18 @@
     text-align: center;
   }
 
-  .no-expand-row .el-table__expand-icon {
-    display: none;
-  }
-
-  &__search {
+  &-search {
+    display: flex;
+    justify-content: flex-end;
     margin-bottom: 10px;
     text-align: right;
+
+    > * {
+      margin-left: 10px;
+    }
   }
 
   .search__input {
     width: 200px;
-  }
-
-  .prize-item__user {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    color: #188fff;
-    cursor: pointer;
-
-    > img {
-      width: 40px;
-      height: 40px;
-      margin-right: 8px;
-      background: #f2f2f2;
-      border: 1px solid #f2f2f2;
-      border-radius: 5px;
-    }
-
-    > div {
-      display: inline-flex;
-      flex-direction: column;
-    }
   }
 }

@@ -1,24 +1,20 @@
-import * as api from '@/api/tags';
+import * as api from '@/api/tourists';
 
 export default {
   namespaced: true,
   state: () => ({
     list: [],
-    count: 0,
-    searchList: {}
+    count: 0
+    // searchList: {}
   }),
   actions: {
     FETCH_SEARCH ({ commit }) {
       return new Promise((resolve, reject) => {
-        // api.fetchSearch().then(({ data }) => {
-        //   commit('FETCH_SEARCH', data.data);
-        //   resolve(res.data);
-        // }).catch((err) => {
-        //   reject(err);
-        // });
-        resolve();
-        commit('FETCH_SEARCH', {
-          type: [{ id: 1, name: '需求' }, { id: 2, name: '资源' }]
+        api.fetchSearch().then((res) => {
+          commit('FETCH_SEARCH', res.data);
+          resolve(res.data);
+        }).catch((err) => {
+          reject(err);
         });
       });
     },
@@ -33,8 +29,10 @@ export default {
         resolve();
         commit('FETCH', {
           data: [
-            { name: '麦麦', type: 1, id: 1 },
-            { name: '麦麦', type: 2, id: 2 }
+            {
+              name: '麦麦',
+              id: 1
+            }
           ],
           extra: {
             count: 10
@@ -48,14 +46,8 @@ export default {
     CREATE ({ commit }, data) {
       return api.create(data);
     },
-    EDIT ({ commit }, { id, data }) {
-      return api.edit(id, data);
-    },
     DELETE ({ commit }, data) {
       return api.del(data);
-    },
-    AUDIT ({ commit }, { id, data }) {
-      return api.audit(id, data);
     }
   },
   mutations: {

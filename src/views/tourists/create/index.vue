@@ -6,18 +6,8 @@
     @close="handleCancel"
   >
     <el-form :model="form" :rules="rules" ref="$createForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="标签名称" prop="name">
+      <el-form-item label="微信号" prop="name">
         <el-input v-model="form.name"></el-input>
-      </el-form-item>
-      <el-form-item label="分类" prop="type">
-        <el-checkbox-group v-model="form.type" class="item-content">
-          <el-checkbox v-for="item in typeList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="操作" prop="state" class="item-content">
-        <el-checkbox-group v-model="form.state" :max="1">
-          <el-checkbox v-for="item in stateList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
-        </el-checkbox-group>
       </el-form-item>
     </el-form>
     <div slot="footer">
@@ -39,34 +29,18 @@
 <script>
 import { createNamespacedHelpers } from 'vuex';
 
-const { mapActions } = createNamespacedHelpers('tags');
+const { mapActions } = createNamespacedHelpers('tourists');
 export default {
-  name: 'createTag',
+  name: 'createTourist',
   data () {
     return {
       visible: false,
-      typeList: [
-        { id: 1, name: '需求' },
-        { id: 2, name: '资源' }
-      ],
-      stateList: [
-        { id: 1, name: '显示' },
-        { id: 2, name: '隐藏' }
-      ],
       form: {
-        name: '',
-        type: [],
-        state: []
+        name: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入标签名称' }
-        ],
-        type: [
-          { required: true, message: '请选择分类' }
-        ],
-        state: [
-          { required: true, message: '请选择操作' }
+          { required: true, message: '请输入微信号' }
         ]
       }
     };

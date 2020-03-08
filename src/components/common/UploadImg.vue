@@ -91,4 +91,10 @@ export default {
     text-align: center;
   }
 }
+
+.is-error {
+  .uploadImg {
+    border-color: #f56c6c;
+  }
+}
 </style>

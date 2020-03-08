@@ -1,7 +1,15 @@
 
 <template>
   <div class="demand-create">
-    <grid :title="id ? '修改需求' : '新增需求'">
+    <grid :title="getTitle">
+      <div class="demand-create__info" v-if="form.status">
+        <div>创建时间: {{ form.time_create }}</div>
+        <div>被邀请合作次数: {{ form.be_invite_times || 0 }}</div>
+        <div>达成合作意向次数: {{ form.success_times || 0 }}</div>
+        <div :class="form.status === 1 ? 'pass' : 'refused'">
+          审核状态: {{ STATUS_LIST[form.status] }}
+        </div>
+      </div>
       <el-form style="width: 600px;" :model="form" :rules="rules" ref="$createform" label-width="110px">
         <div class="title">基本信息</div>
         <el-row>
@@ -11,8 +19,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="昵称" prop="nike">
-              <el-input v-model="form.nike" />
+            <el-form-item label="昵称" prop="name">
+              <el-input v-model="form.name" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -23,17 +31,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="职位" prop="position">
-              <el-input v-model="form.position" />
+            <el-form-item label="职位" prop="job">
+              <el-input v-model="form.job" />
             </el-form-item>
           </el-col>
         </el-row>
         <div class="title">对接信息<span>（信息描述得越详细越高效）</span></div>
-        <el-form-item label="我的需求" prop="demand.text">
-          <el-input type="textarea" v-model="form.demand.text" placeholder="示例：1.小程序开发 2.网站开发"/>
+        <el-form-item label="我的需求" prop="needs.text">
+          <el-input type="textarea" v-model="form.needs.text" placeholder="示例：1.小程序开发 2.网站开发"/>
         </el-form-item>
-        <el-form-item label="需求标签选择" prop="demand.tags" class="item-content">
-          <el-select v-model="form.demand.tags" placeholder="请选择">
+        <el-form-item label="需求标签选择" prop="needs.tags" class="item-content">
+          <el-select v-model="form.needs.tags" placeholder="请选择">
           </el-select>
         </el-form-item>
         <el-form-item label="我的资源" prop="resource.text">
@@ -49,7 +57,7 @@
             <el-form-item label="" prop="province" class="item-content">
               <el-cascader
                 :options="location"
-                :props="props"
+                :props="format"
                 :separator="'-'"
                 v-model="form.province"
               ></el-cascader>
@@ -59,27 +67,30 @@
             </el-form-item>
           </div>
         </el-form-item>
-        <el-form-item label="联系方式" prop="phone">
-          <el-input v-model="form.phone" />
+        <el-form-item label="联系方式" prop="contact">
+          <el-input v-model="form.contact" />
         </el-form-item>
         <el-form-item label="类型" prop="type" class="item-content">
           <el-radio v-model="form.type" :label="1">个人</el-radio>
           <el-radio v-model="form.type" :label="2">公司</el-radio>
         </el-form-item>
-        <el-form-item label="" prop="personalImg" v-if="form.type === 1">
-          <UploadImg field="personalImg" @onSuccess="handleChoose" />
-          <div class="item-content tip">请上传个人工牌照</div>
+        <el-form-item label="" prop="photo">
+          <UploadImg field="photo" @onSuccess="handleChoose" />
+          <div class="item-content tip">{{ form.type === 1 ? '请上传个人工牌照' : '请上传公司营业执照' }}</div>
         </el-form-item>
-        <el-form-item label="" prop="companyImg" v-if="form.type === 2">
-          <UploadImg field="companyImg" @onSuccess="handleChoose" />
-          <div class="item-content tip">请上传公司营业执照</div>
-        </el-form-item>
-        <el-form-item label="我的产品" prop="productImg">
-          <UploadImg field="productImg" @onSuccess="handleChoose" />
+        <el-form-item label="我的产品" prop="product_code">
+          <UploadImg field="product_code" @onSuccess="handleChoose" />
           <div class="item-content tip">请上传产品二维码</div>
         </el-form-item>
+        <el-form-item label="是否显示产品图" v-if="form.product_code" prop="is_show" class="item-content">
+          <el-switch v-model="form.is_show" :active-value="1" :inactive-value="0" />
+        </el-form-item>
         <el-form-item class="operate-btns">
-          <el-button type="primary" :loading="loading" @click="handleSubmit">提交</el-button>
+          <template v-if="form.status === 0">
+            <el-button type="primary" :loading="loading" @click="handleAudit(1)">通过</el-button>
+            <el-button :loading="loading" @click="handleAudit(0)">拒绝</el-button>
+          </template>
+          <el-button v-if="!form.status && form.status !== 0" type="primary" :loading="loading" @click="handleSubmit">提交</el-button>
         </el-form-item>
       </el-form>
     </grid>
@@ -95,10 +106,11 @@
 */
 
 import location from '@/assets/location.json';
+import { STATUS_LIST } from '../constants';
 import UploadImg from '@/components/common/UploadImg';
 import { createNamespacedHelpers } from 'vuex';
 
-const { mapState, mapActions } = createNamespacedHelpers('demand');
+const { mapActions } = createNamespacedHelpers('demand');
 
 export default {
   props: {
@@ -109,17 +121,29 @@ export default {
     UploadImg
   },
 
+  computed: {
+    getTitle () {
+      let title = '新增需求';
+      if (this.id) {
+        if (this.form.status === 0) title = '审核需求';
+        else title = '查看详情';
+      }
+      return title;
+    }
+  },
+
   data () {
     return {
+      STATUS_LIST,
       loading: false,
       current: 1,
       location,
       form: {
         avatar: '',
-        nike: '',
+        name: '',
         company: '',
-        position: '',
-        demand: {
+        job: '',
+        needs: {
           text: '',
           tags: []
         },
@@ -129,26 +153,26 @@ export default {
         },
         province: '',
         address: '',
-        phone: '',
+        contact: '',
         type: 1,
-        personalImg: '',
-        companyImg: '',
-        productImg: ''
+        photo: '',
+        product_code: '',
+        is_show: 1
       },
       rules: {
         avatar: [
           { required: true, message: '请上传头像' }
         ],
-        nike: [
+        name: [
           { required: true, message: '请输入昵称' }
         ],
         company: [
           { required: true, message: '请输入所在公司' }
         ],
-        position: [
+        job: [
           { required: true, message: '请输入您的职位' }
         ],
-        'demand.text': [
+        'needs.text': [
           { required: true, message: '请输入我的需求' }
         ],
         'resource.text': [
@@ -160,20 +184,20 @@ export default {
         address: [
           { required: true, message: '请输入详细地址' }
         ],
-        phone: [
+        contact: [
           { required: true, message: '请输入联系方式' }
         ],
         type: [
           { required: true, message: '请选择类型' }
         ],
-        personalImg: [
-          { required: true, message: '请上传个人工牌照' }
+        photo: [
+          { required: true, message: '请上传照片' }
         ],
         companyImg: [
           { required: true, message: '请上传公司营业执照' }
         ]
       },
-      props: {
+      format: {
         label: 'name',
         value: 'name',
         children: 'children'
@@ -182,25 +206,15 @@ export default {
   },
 
   created () {
-    // this.fetch(1);
-  },
-
-  computed: {
-    ...mapState(['list', 'count', 'searchList'])
+    // if (this.id && this.id !== 'main') {
+    //   this.FIND(this.id).then(data => {
+    //     this.form = data;
+    //   })
+    // }
   },
 
   methods: {
     ...mapActions(['FIND', 'CREATE', 'EDIT']),
-
-    fetch (page) {
-      this.current = page;
-      const params = {
-        limit: 20,
-        page,
-        ...this.form
-      };
-      this.FETCH(params);
-    },
 
     handleSubmit () {
       this.$refs.$createform.validate(async (valid) => {
@@ -227,22 +241,8 @@ export default {
       this.form[field] = data.img;
     },
 
-    handleAvatarSuccess (res, file) {
-      console.log(res, file);
-      this.form.avatar = URL.createObjectURL(file.raw);
-    },
-
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
-      }
-      return isJPG && isLt2M;
+    handleAudit (type) {
+      console.log(this.id, '通过/拒绝');
     }
   }
 };

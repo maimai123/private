@@ -1,21 +1,21 @@
 
 <template>
-  <div class="tags">
-    <grid title="标签列表">
+  <div class="tourists">
+    <grid title="优质游客圈">
       <!-- 搜索 -->
-      <div class="tags-search">
+      <div class="tourists-search">
         <el-button type="primary" @click="handleCreate">新建</el-button>
         <div class="operate">
-          <el-select v-model="form.type" placeholder="请选择分类" class="search-select">
+          <el-select v-model="form.type" placeholder="用户类型" class="search-select">
             <el-option
-              v-for="item in searchList.type"
+              v-for="item in typeList"
               :key="item.id"
               :label="item.name"
               :value="item.id">
             </el-option>
           </el-select>
           <el-input
-            placeholder="标签名称"
+            placeholder="请输入微信昵称"
             class="search-input"
             auto-complete="off"
             @keyup.enter.native="fetch(1)"
@@ -36,18 +36,21 @@
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe>
         <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
-        <el-table-column prop="name" label="标签名称" width="100"></el-table-column>
-        <el-table-column prop="name" label="分类" width="100"></el-table-column>
-        <el-table-column prop="name" label="创建时间"></el-table-column>
-        <el-table-column prop="type" label="状态">
-          <template slot-scope="scope">
-            {{ scope.row.type === 1 ? '显示' : '隐藏' }}
-          </template>
-        </el-table-column>
+        <el-table-column prop="name" label="微信昵称" width="100"></el-table-column>
+        <el-table-column prop="name" label="进群时间"></el-table-column>
+        <el-table-column prop="name" label="用户类型" width="100"></el-table-column>
+        <el-table-column prop="name" label="被推荐次数"></el-table-column>
+        <el-table-column prop="name" label="被邀请合作次数"></el-table-column>
+        <el-table-column prop="name" label="成功合作次数"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="small" @click="handeleToggle(scope.row)" type="text">
-              {{ scope.row.type === 1 ? '隐藏' : '显示' }}
+            <router-link :to="{ name: 'demand' }" class="operate-btn">
+              <el-button size="small" type="text">
+                查看需求
+              </el-button>
+            </router-link>
+            <el-button size="small" @click="handeleOperate(scope.row)" type="text">
+              退群
             </el-button>
           </template>
         </el-table-column>
@@ -60,23 +63,23 @@
         :page-size="20"
         :total="count">
       </el-pagination>
-      <CreateTag ref="$createModal" />
+      <CreateModal ref="$createModal" />
     </grid>
   </div>
 </template>
 
 <script>
 /*
-  name: tags => index.vue
-  desc: 标签管理
+  name: tourists => index.vue
+  desc: 优质游客圈管理
   author: 麦麦
   version：v1.0.0
 */
 
-import CreateTag from './create';
+import CreateModal from './create';
 import { createNamespacedHelpers } from 'vuex';
 
-const { mapState, mapActions } = createNamespacedHelpers('tags');
+const { mapState, mapActions } = createNamespacedHelpers('tourists');
 
 export default {
   data () {
@@ -86,12 +89,16 @@ export default {
         type: '',
         daterange: ''
       },
+      typeList: [
+        { id: 1, name: '群主' },
+        { id: 2, name: '非群主' }
+      ],
       current: 1
     };
   },
 
   created () {
-    this.FETCH_SEARCH();
+    // this.FETCH_SEARCH();
     this.fetch(1);
   },
 
@@ -100,11 +107,11 @@ export default {
   },
 
   components: {
-    CreateTag
+    CreateModal
   },
 
   methods: {
-    ...mapActions(['FETCH_SEARCH', 'FETCH', 'AUDIT']),
+    ...mapActions(['FETCH_SEARCH', 'FETCH', 'DELETE']),
 
     fetch (page) {
       this.current = page;
@@ -122,8 +129,15 @@ export default {
       });
     },
 
-    handeleToggle (row) {
-      console.log(row);
+    handeleOperate (row) {
+      this.$confirm('确定退群吗？退群之后将不属于优质游客', '退群', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await this.DELETE(row.id);
+        this.$message({ type: 'success', message: '删除成功!' });
+      }).catch(() => {});
     }
   }
 };

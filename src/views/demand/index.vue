@@ -13,11 +13,11 @@
             class="search-input"
             auto-complete="off"
             @keyup.enter.native="fetch(1)"
-            v-model="form.q"
+            v-model="form.name"
           />
           <el-select v-model="form.type" placeholder="请选择状态" class="search-select">
             <el-option
-              v-for="item in searchList.type"
+              v-for="item in TYPE_LIST"
               :key="item.id"
               :label="item.name"
               :value="item.id">
@@ -25,7 +25,7 @@
           </el-select>
           <el-select v-model="form.status" placeholder="请选择审核状态" class="search-select">
             <el-option
-              v-for="item in searchList.status"
+              v-for="item in STATUS_LIST"
               :key="item.id"
               :label="item.name"
               :value="item.id">
@@ -57,7 +57,9 @@
         <el-table-column prop="name" label="状态"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="small" @click="removeRow(scope)" type="danger">审核</el-button>
+            <el-button v-if="scope.row.status === 0" @click="handleJump(scope.row.id)" type="text">审核</el-button>
+            <el-button v-else @click="handleJump(scope.row.id)" type="text">查看详情</el-button>
+            <el-button @click="handleJump(scope.row.id)" type="text">{{ scope.row.is_show ? '隐藏' : '显示' }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -82,6 +84,7 @@
 */
 
 import { createNamespacedHelpers } from 'vuex';
+import { TYPE_LIST, STATUS_LIST } from './constants';
 
 const { mapState, mapActions } = createNamespacedHelpers('demand');
 
@@ -89,26 +92,29 @@ export default {
   data () {
     return {
       form: {
-        q: '',
+        name: '',
         type: '',
         status: '',
         daterange: ''
       },
-      current: 1
+      current: 1,
+      TYPE_LIST,
+      STATUS_LIST
     };
   },
 
   created () {
-    this.FETCH_SEARCH();
+    const { name } = this.$route.query;
+    if (name) this.form.name = name;
     this.fetch(1);
   },
 
   computed: {
-    ...mapState(['list', 'count', 'searchList'])
+    ...mapState(['list', 'count'])
   },
 
   methods: {
-    ...mapActions(['FETCH_SEARCH', 'FETCH', 'AUDIT']),
+    ...mapActions(['FETCH', 'AUDIT']),
 
     fetch (page) {
       this.current = page;
@@ -118,6 +124,10 @@ export default {
         ...this.form
       };
       this.FETCH(params);
+    },
+
+    handleJump (id) {
+      this.$router.push({ name: 'demand/create', params: { id } });
     }
   }
 };

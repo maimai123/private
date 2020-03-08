@@ -1,4 +1,4 @@
-import * as api from '@/api/demand';
+import * as api from '@/api/order';
 
 export default {
   namespaced: true,
@@ -18,10 +18,8 @@ export default {
         resolve();
         commit('FETCH', {
           data: [
-            {
-              name: '麦麦',
-              id: 1
-            }
+            { name: '麦麦', id: 1 },
+            { name: '麦麦', id: 2 }
           ],
           extra: {
             count: 10
@@ -29,20 +27,8 @@ export default {
         });
       });
     },
-    FIND ({ commit }, id) {
-      return api.find(id);
-    },
-    CREATE ({ commit }, data) {
-      return api.create(data);
-    },
-    EDIT ({ commit }, { id, data }) {
-      return api.edit(id, data);
-    },
     DELETE ({ commit }, data) {
-      return api.del(data);
-    },
-    AUDIT ({ commit }, { id, data }) {
-      return api.audit(id, data);
+      return api.del({ ids: data.join(',') });
     }
   },
   mutations: {

@@ -58,7 +58,9 @@ export default {
         { item: '首页', name: 'home', access: 'MENU_HOME' },
         { item: '用户管理', name: 'users', access: 'MENU_USERS' },
         { item: '需求管理', name: 'demand', access: 'MENU_DEMAND' },
-        { item: '标签管理', name: 'tags', access: 'MENU_TAGS' }
+        { item: '订单管理', name: 'order', access: 'MENU_ORDER' },
+        { item: '标签管理', name: 'tags', access: 'MENU_TAGS' },
+        { item: '优质游客圈', name: 'tourists', access: 'MENU_TOURISTS' }
         // {
         //   item: 'about',
         //   name: 'about',
@@ -94,7 +96,8 @@ export default {
     ...mapActions(['GET_USER', 'GET_ACCESS', 'LOGIN_OUT']),
 
     onSelect (name) {
-      this.$router.push({ name });
+      // eslint-disable-next-line handle-callback-err
+      this.$router.push({ name }).catch(err => {});
     },
 
     onLogout () {

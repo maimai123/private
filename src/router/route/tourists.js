@@ -1,13 +1,13 @@
 export default [
   {
-    path: '/about',
+    path: '/tourists',
     component: () => import('@/components/layout'),
     meta: { requiresAuth: true },
     children: [
       {
         path: '/',
-        name: 'about',
-        component: () => import('@/views/about/index'),
+        name: 'tourists',
+        component: () => import('@/views/tourists/index'),
         meta: { requiresAuth: true }
       }
     ]
