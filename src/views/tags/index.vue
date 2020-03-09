@@ -6,20 +6,21 @@
       <div class="tags-search">
         <el-button type="primary" @click="handleCreate">新建</el-button>
         <div class="operate">
-          <el-select v-model="form.type" placeholder="请选择分类" class="search-select">
+          <el-select v-model="form.category" clearable placeholder="请选择分类" class="search-select">
             <el-option
-              v-for="item in searchList.type"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
+              v-for="(item, key) in category"
+              :key="key"
+              :label="item"
+              :value="key">
             </el-option>
           </el-select>
           <el-input
             placeholder="标签名称"
             class="search-input"
             auto-complete="off"
+            clearable
             @keyup.enter.native="fetch(1)"
-            v-model="form.q"
+            v-model="form.title"
           />
           <el-date-picker
             v-model="form.daterange"
@@ -35,19 +36,22 @@
       </div>
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe>
-        <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
-        <el-table-column prop="name" label="标签名称" width="100"></el-table-column>
-        <el-table-column prop="name" label="分类" width="100"></el-table-column>
-        <el-table-column prop="name" label="创建时间"></el-table-column>
-        <el-table-column prop="type" label="状态">
+        <el-table-column prop="title" label="标签名称" width="100"></el-table-column>
+        <el-table-column prop="category" label="分类" width="100">
           <template slot-scope="scope">
-            {{ scope.row.type === 1 ? '显示' : '隐藏' }}
+            {{ category[scope.row.category] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="time_create" label="创建时间"></el-table-column>
+        <el-table-column prop="is_show" label="状态">
+          <template slot-scope="scope">
+            {{ scope.row.is_show === 1 ? '显示' : '隐藏' }}
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="small" @click="handeleToggle(scope.row)" type="text">
-              {{ scope.row.type === 1 ? '隐藏' : '显示' }}
+            <el-button size="small" @click="handleToggle(scope.row.id, scope.row.is_show ? 0 : 1)" type="text">
+              {{ scope.row.is_show === 1 ? '隐藏' : '显示' }}
             </el-button>
           </template>
         </el-table-column>
@@ -82,21 +86,24 @@ export default {
   data () {
     return {
       form: {
-        q: '',
-        type: '',
+        title: '',
+        is_show: '',
         daterange: ''
+      },
+      category: {
+        needs: '需求',
+        resource: '资源'
       },
       current: 1
     };
   },
 
   created () {
-    this.FETCH_SEARCH();
     this.fetch(1);
   },
 
   computed: {
-    ...mapState(['list', 'count', 'searchList'])
+    ...mapState(['list', 'count'])
   },
 
   components: {
@@ -104,7 +111,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['FETCH_SEARCH', 'FETCH', 'AUDIT']),
+    ...mapActions(['FETCH', 'CHANGE_SHOW']),
 
     fetch (page) {
       this.current = page;
@@ -122,8 +129,10 @@ export default {
       });
     },
 
-    handeleToggle (row) {
-      console.log(row);
+    async handleToggle (id, is_show) {
+      await this.CHANGE_SHOW({ id, is_show })
+      this.$message.success('操作成功');
+      this.fetch(this.current);
     }
   }
 };

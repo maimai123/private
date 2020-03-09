@@ -6,20 +6,21 @@
       <div class="tourists-search">
         <el-button type="primary" @click="handleCreate">新建</el-button>
         <div class="operate">
-          <el-select v-model="form.type" placeholder="用户类型" class="search-select">
+          <el-select v-model="form.role_type" clearable placeholder="用户类型" class="search-select">
             <el-option
-              v-for="item in typeList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
+              v-for="(item, key) in role_type"
+              :key="key"
+              :label="item"
+              :value="key">
             </el-option>
           </el-select>
           <el-input
             placeholder="请输入微信昵称"
             class="search-input"
+            clearable
             auto-complete="off"
             @keyup.enter.native="fetch(1)"
-            v-model="form.q"
+            v-model="form.name"
           />
           <el-date-picker
             v-model="form.daterange"
@@ -35,21 +36,24 @@
       </div>
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe>
-        <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
         <el-table-column prop="name" label="微信昵称" width="100"></el-table-column>
-        <el-table-column prop="name" label="进群时间"></el-table-column>
-        <el-table-column prop="name" label="用户类型" width="100"></el-table-column>
-        <el-table-column prop="name" label="被推荐次数"></el-table-column>
-        <el-table-column prop="name" label="被邀请合作次数"></el-table-column>
-        <el-table-column prop="name" label="成功合作次数"></el-table-column>
+        <el-table-column prop="time_join" label="进群时间"></el-table-column>
+        <el-table-column prop="role_type" label="用户类型" width="100">
+          <template slot-scope="scope">
+            {{ role_type[scope.row.role_type] }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="be_recommend_times" label="被推荐次数"></el-table-column>
+        <el-table-column prop="be_invite_times" label="被邀请合作次数"></el-table-column>
+        <el-table-column prop="success_times" label="成功合作次数"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <router-link :to="{ name: 'demand' }" class="operate-btn">
+            <router-link :to="{ name: 'demand', query: { name: scope.row.name } }" class="operate-btn">
               <el-button size="small" type="text">
                 查看需求
               </el-button>
             </router-link>
-            <el-button size="small" @click="handeleOperate(scope.row)" type="text">
+            <el-button size="small" @click="handeleOut(scope.row)" type="text">
               退群
             </el-button>
           </template>
@@ -85,25 +89,24 @@ export default {
   data () {
     return {
       form: {
-        q: '',
-        type: '',
+        name: '',
+        role_type: '',
         daterange: ''
       },
-      typeList: [
-        { id: 1, name: '群主' },
-        { id: 2, name: '非群主' }
-      ],
+      role_type: {
+        1: '群主',
+        2: '成员'
+      },
       current: 1
     };
   },
 
   created () {
-    // this.FETCH_SEARCH();
     this.fetch(1);
   },
 
   computed: {
-    ...mapState(['list', 'count', 'searchList'])
+    ...mapState(['list', 'count'])
   },
 
   components: {
@@ -111,7 +114,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['FETCH_SEARCH', 'FETCH', 'DELETE']),
+    ...mapActions(['FETCH', 'OUT']),
 
     fetch (page) {
       this.current = page;
@@ -129,14 +132,14 @@ export default {
       });
     },
 
-    handeleOperate (row) {
+    handeleOut (row) {
       this.$confirm('确定退群吗？退群之后将不属于优质游客', '退群', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        await this.DELETE(row.id);
-        this.$message({ type: 'success', message: '删除成功!' });
+        await this.OUT(row.id);
+        this.$message({ type: 'success', message: '退群成功!' });
       }).catch(() => {});
     }
   }

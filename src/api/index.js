@@ -2,7 +2,13 @@ import axios from 'axios';
 import { MessageBox, Notification } from 'element-ui';
 
 const onRequest = (req) => {
-  return req;
+  const params = req?.params;
+  if (params && params.daterange && params.daterange.length > 0) {
+    params.time_start = params.daterange[0];
+    params.time_end = params.daterange[1];
+  }
+  delete params.daterange;
+  return { ...req, params };
 };
 const onRequestError = (err) => {
   return Promise.reject(err);

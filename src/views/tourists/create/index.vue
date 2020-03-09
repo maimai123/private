@@ -61,6 +61,7 @@ export default {
       this.$refs.$createForm.validate(async (valid) => {
         if (valid) {
           await this.CREATE(this.form);
+          this.$message.success('创建成功');
           this.visible = false;
           return this._resolve(true);
         }

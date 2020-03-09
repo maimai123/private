@@ -6,8 +6,8 @@
     @close="handleCancel"
   >
     <el-form :model="form" :rules="rules" ref="$createForm" label-width="60px">
-      <el-form-item label="天数" prop="day">
-        <el-input v-model="form.day"></el-input>
+      <el-form-item label="天数" prop="days">
+        <el-input v-model="form.days"></el-input>
       </el-form-item>
       <el-form-item label="价格" prop="price">
         <el-input v-model="form.price"></el-input>
@@ -44,11 +44,11 @@ export default {
     return {
       visible: false,
       form: {
-        day: '',
+        days: '',
         price: ''
       },
       rules: {
-        day: [
+        days: [
           { required: true, message: '请输入天数' },
           { pattern: /^\+?[1-9][0-9]*$/, message: '必须输入数字且为大于0的正整数' }
         ],
@@ -61,9 +61,10 @@ export default {
   },
 
   methods: {
-    ...mapActions(['CREATE']),
+    ...mapActions(['FETCH_EQUITY_PRICE', 'EDIT_EQUITY_PRICE']),
 
     open () {
+      this.fetchData();
       this.$refs.$createForm && this.$refs.$createForm.resetFields();
       this.visible = true;
       return new Promise(
@@ -71,10 +72,17 @@ export default {
       );
     },
 
+    async fetchData () {
+      await this.FETCH_EQUITY_PRICE().then(({ data }) => {
+        this.form = data.data;
+      })
+    },
+
     handleSubmit () {
       this.$refs.$createForm.validate(async (valid) => {
         if (valid) {
-          await this.CREATE(this.form);
+          await this.EDIT_EQUITY_PRICE(this.form);
+          this.$message.success('修改成功')
           this.visible = false;
           return this._resolve(true);
         }

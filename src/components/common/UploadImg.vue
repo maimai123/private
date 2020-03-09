@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import { upload } from '@/api/common';
+import { uploadMultimedia } from '@/api/common';
 
 export default {
   props: {
@@ -40,8 +40,9 @@ export default {
     async selectFile (e) {
       const { files } = e.target;
       const { field } = this;
-      await upload(field, files).then((data) => {
-        this.$emit('onSuccess', { field, data });
+      await uploadMultimedia(field, files).then((data) => {
+        console.log();
+        this.$emit('onSuccess', { field, data: data[0] });
       });
     }
   }

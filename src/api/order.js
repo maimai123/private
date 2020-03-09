@@ -2,18 +2,25 @@ import { http } from '@/api';
 
 /**
  * 订单列表
- * @param Object limit, page, type, q, dateRange
+ * @param Object limit, page, time_start，time_end, keywords
  */
 export const fetch = (params) => {
-  return http.get('order/list', { params });
+  return http.get('operation/orders/index', { params });
 };
 
 /**
- * 修改
- * @param Object id
+ * 获取会员权益/价格
  */
-export const edit = (id, data) => {
-  return http.put(`order/list/${id}`, data);
+export const getEquityAndPrice = () => {
+  return http.get('operation/orders/setting');
+};
+
+/**
+ * 修改会员权益/价格
+ * @param Object data
+ */
+export const editEquityAndPrice = (data) => {
+  return http.post('operation/orders/setting', data);
 };
 
 /**
@@ -21,5 +28,5 @@ export const edit = (id, data) => {
  * @param Number id
  */
 export const del = (data) => {
-  return http.delete('order/list/', { params: data });
+  return http.get('operation/orders/delete', { params: data });
 };

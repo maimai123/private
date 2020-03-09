@@ -33,7 +33,7 @@ export const change = (id, is_show) => http.get('operation/tag/change-show', { p
  * @param Object
  */
 export const create = (data) => {
-  return http.post('demand/list', data);
+  return http.post('operation/needs/create', data);
 }
 
 /**
@@ -41,7 +41,7 @@ export const create = (data) => {
  * @param Object id
  */
 export const edit = (id, data) => {
-  return http.put(`demand/list/${id}`, data);
+  return http.put('operation/needs/create', { id, ...data });
 };
 
 /**

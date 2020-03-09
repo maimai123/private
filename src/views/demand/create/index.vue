@@ -56,12 +56,12 @@
         <div class="title">联系方式<span>（信息保密，仅用于高效对接）</span></div>
         <el-form-item label="地址">
           <div class="flex">
-            <el-form-item label="" prop="province" class="item-content">
+            <el-form-item label="" prop="city" class="item-content">
               <el-cascader
                 :options="location"
                 :props="format"
                 :separator="'-'"
-                v-model="form.province"
+                v-model="form.city"
               ></el-cascader>
             </el-form-item>
             <el-form-item label="" prop="address" class="item-content">
@@ -112,7 +112,7 @@ import { STATUS_LIST } from '../constants';
 import UploadImg from '@/components/common/UploadImg';
 import { createNamespacedHelpers } from 'vuex';
 
-const { mapActions } = createNamespacedHelpers('demand');
+const { mapState, mapActions } = createNamespacedHelpers('demand');
 
 export default {
   props: {
@@ -124,6 +124,7 @@ export default {
   },
 
   computed: {
+    ...mapState(['needs', 'resource']),
     getTitle () {
       let title = '新增需求';
       if (this.id) {
@@ -149,7 +150,7 @@ export default {
         needs_tag: [],
         resource: '',
         resource_tag: [],
-        province: '',
+        city: '',
         address: '',
         contact: '',
         type: 1,
@@ -176,7 +177,7 @@ export default {
         resource: [
           { required: true, message: '请输入我的资源' }
         ],
-        province: [
+        city: [
           { required: true, message: '请选择省市区' }
         ],
         address: [
@@ -199,32 +200,34 @@ export default {
         label: 'name',
         value: 'name',
         children: 'children'
-      },
-      needs: [],
-      resource: []
+      }
     };
   },
 
   async created () {
-    await this.FETCH_TAGS('needs').then(data => { this.needs = data; });
-    await this.FETCH_TAGS('resource').then(data => { this.resource = data; });
-    this.getInfo();
+    await this.FETCH_TAGS('needs');
+    await this.FETCH_TAGS('resource');
+    await this.getInfo();
   },
 
   methods: {
-    ...mapActions(['FETCH_TAGS', 'FIND', 'CREATE', 'AUDIT']),
+    ...mapActions(['FETCH_TAGS', 'FIND', 'CREATE', 'EDIT', 'AUDIT']),
 
     handleSubmit () {
+      const { city } = this.form;
       this.$refs.$createform.validate(async (valid) => {
         if (valid) {
           this.loading = true;
           try {
-            console.log(valid);
-            // if (this.id) {
-            //   await this.CREATE(this.form);
-            // } else {
-            //   await this.CREATE({ id: this.id, data: this.form });
-            // }
+            this.form.city = city.join(',');
+            if (this.id) {
+              await this.EDIT({ id: this.id, data: this.form });
+              this.$message.success('修改成功')
+            } else {
+              await this.CREATE(this.form);
+              this.$message.success('新建成功')
+            }
+            this.$router.push({ name: 'demand' });
             this.loading = false;
           } catch (err) {
             this.loading = false;
@@ -239,12 +242,13 @@ export default {
       if (this.id && this.id !== 'main') {
         this.FIND(this.id).then(({ data }) => {
           this.form = data.data;
+          this.form.city = this.form.city.split(',');
         })
       }
     },
 
     handleChoose ({ field, data }) {
-      this.form[field] = data.img;
+      this.form[field] = data.file_path;
     },
 
     async handleAudit (status) {

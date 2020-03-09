@@ -4,7 +4,9 @@ export default {
   namespaced: true,
   state: () => ({
     list: [],
-    count: 0
+    count: 0,
+    needs: [],
+    resource: []
   }),
   actions: {
     FETCH ({ commit }, params) {
@@ -20,6 +22,7 @@ export default {
     FETCH_TAGS ({ commit }, param) {
       return new Promise((resolve, reject) => {
         api.fetchTags(param).then(({ data }) => {
+          commit('FETCH_TAGS', { param, data });
           resolve(data.data);
         }).catch((err) => {
           reject(err);
@@ -46,6 +49,9 @@ export default {
     }
   },
   mutations: {
+    FETCH_TAGS (state, { param, data }) {
+      state[param] = data.data;
+    },
     FETCH (state, data) {
       state.list = data.data;
       state.count = data.total;

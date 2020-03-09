@@ -6,18 +6,18 @@
     @close="handleCancel"
   >
     <el-form :model="form" :rules="rules" ref="$createForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="标签名称" prop="name">
-        <el-input v-model="form.name"></el-input>
+      <el-form-item label="标签名称" prop="title">
+        <el-input v-model="form.title"></el-input>
       </el-form-item>
-      <el-form-item label="分类" prop="type">
-        <el-checkbox-group v-model="form.type" class="item-content">
-          <el-checkbox v-for="item in typeList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+      <el-form-item label="分类" prop="category">
+        <el-checkbox-group v-model="form.category" class="item-content">
+          <el-checkbox v-for="(item, key) in category" :label="key" :key="key">{{item}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="操作" prop="state" class="item-content">
-        <el-checkbox-group v-model="form.state" :max="1">
-          <el-checkbox v-for="item in stateList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
-        </el-checkbox-group>
+        <el-radio-group v-model="form.is_show">
+          <el-radio v-for="(item, key) in is_show" :label="key" :key="key">{{item}}</el-radio>
+        </el-radio-group>
       </el-form-item>
     </el-form>
     <div slot="footer">
@@ -45,27 +45,27 @@ export default {
   data () {
     return {
       visible: false,
-      typeList: [
-        { id: 1, name: '需求' },
-        { id: 2, name: '资源' }
-      ],
-      stateList: [
-        { id: 1, name: '显示' },
-        { id: 2, name: '隐藏' }
-      ],
+      category: {
+        needs: '需求',
+        resource: '资源'
+      },
+      is_show: {
+        0: '隐藏',
+        1: '显示'
+      },
       form: {
-        name: '',
-        type: [],
-        state: []
+        title: '',
+        category: [],
+        is_show: []
       },
       rules: {
-        name: [
+        title: [
           { required: true, message: '请输入标签名称' }
         ],
-        type: [
+        category: [
           { required: true, message: '请选择分类' }
         ],
-        state: [
+        is_show: [
           { required: true, message: '请选择操作' }
         ]
       }
@@ -84,9 +84,10 @@ export default {
     },
 
     handleSubmit () {
+      const { category, is_show } = this.form;
       this.$refs.$createForm.validate(async (valid) => {
         if (valid) {
-          await this.CREATE(this.form);
+          await this.CREATE({ ...this.form, category: category.join(',') });
           this.visible = false;
           return this._resolve(true);
         }

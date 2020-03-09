@@ -6,7 +6,7 @@
     @close="handleCancel"
   >
     <el-form :model="form" :rules="rules" ref="$createForm" label-width="0">
-      <el-form-item label="" prop="text">
+      <el-form-item label="" prop="customer_rights">
         <div class="content-left">
           <textarea v-show="false" ref="$textarea" />
         </div>
@@ -45,10 +45,10 @@ export default {
     return {
       visible: false,
       form: {
-        text: ''
+        customer_rights: ''
       },
       rules: {
-        text: [
+        customer_rights: [
           { required: true, message: '请输入会员权益' }
         ]
       }
@@ -56,15 +56,22 @@ export default {
   },
 
   methods: {
-    ...mapActions(['CREATE']),
+    ...mapActions(['FETCH_EQUITY_PRICE', 'EDIT_EQUITY_PRICE']),
 
-    open () {
-      this.$refs.$createForm && this.$refs.$createForm.resetFields();
+    async open () {
+      await this.fetchData()
       this.getSimditor();
+      this.$refs.$createForm && this.$refs.$createForm.resetFields();
       this.visible = true;
       return new Promise(
         (resolve, reject) => { this._resolve = resolve; this._reject = reject; }
       );
+    },
+
+    async fetchData () {
+      await this.FETCH_EQUITY_PRICE().then(({ data }) => {
+        this.form = data.data;
+      })
     },
 
     getSimditor () {
@@ -88,15 +95,16 @@ export default {
             leaveConfirm: '正在上传文件，如果离开上传会自动取消'
           }
         });
-        this.simditor.setValue(this.form.text);
+        this.simditor.setValue(this.form.customer_rights);
       });
     },
 
     handleSubmit () {
-      this.form.text = this.simditor.getValue();
+      this.form.customer_rights = this.simditor.getValue();
       this.$refs.$createForm.validate(async (valid) => {
         if (valid) {
-          await this.CREATE(this.form);
+          await this.EDIT_EQUITY_PRICE(this.form);
+          this.$message.success('修改成功')
           this.visible = false;
           return this._resolve(true);
         }

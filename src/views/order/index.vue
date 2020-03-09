@@ -13,9 +13,10 @@
           <el-input
             placeholder="请输入微信昵称 / 订单号"
             class="search-input"
+            clearable
             auto-complete="off"
             @keyup.enter.native="fetch(1)"
-            v-model="form.q"
+            v-model="form.keywords"
           />
           <el-date-picker
             v-model="form.daterange"
@@ -32,11 +33,15 @@
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe @selection-change="onSelectionChange">
         <el-table-column type="selection"></el-table-column>
-        <el-table-column prop="name" label="订单号" width="150"></el-table-column>
+        <el-table-column prop="order_sn" label="订单号" width="150"></el-table-column>
         <el-table-column prop="name" label="微信昵称"></el-table-column>
-        <el-table-column prop="name" label="支付方式" width="100"></el-table-column>
-        <el-table-column prop="name" label="充值金额"></el-table-column>
-        <el-table-column prop="name" label="充值时间"></el-table-column>
+        <el-table-column prop="pay_type" label="支付方式" width="100"></el-table-column>
+        <el-table-column prop="amount" label="充值金额">
+          <template slot-scope="scope">
+            {{ scope.row.amount ? scope.row.amount / 1000 : 0 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="time_create" label="充值时间"></el-table-column>
       </el-table>
       <!-- 分页 -->
       <el-pagination
@@ -70,7 +75,7 @@ export default {
   data () {
     return {
       form: {
-        q: '',
+        keywords: '',
         daterange: ''
       },
       current: 1
