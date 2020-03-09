@@ -15,7 +15,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="头像" prop="avatar">
-              <UploadImg field="avatar" @onSuccess="handleChoose" />
+              <UploadImg :url="form.avatar" field="avatar" @onSuccess="handleChoose" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -37,18 +37,20 @@
           </el-col>
         </el-row>
         <div class="title">对接信息<span>（信息描述得越详细越高效）</span></div>
-        <el-form-item label="我的需求" prop="needs.text">
-          <el-input type="textarea" v-model="form.needs.text" placeholder="示例：1.小程序开发 2.网站开发"/>
+        <el-form-item label="我的需求" prop="needs">
+          <el-input type="textarea" v-model="form.needs" placeholder="示例：1.小程序开发 2.网站开发"/>
         </el-form-item>
-        <el-form-item label="需求标签选择" prop="needs.tags" class="item-content">
-          <el-select v-model="form.needs.tags" placeholder="请选择">
+        <el-form-item label="需求标签选择" prop="needs_tag" class="item-content">
+          <el-select v-model="form.needs_tag" multiple placeholder="请选择">
+            <el-option v-for="item in needs" :key="item.id" :label="item.title" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="我的资源" prop="resource.text">
-          <el-input type="textarea" v-model="form.resource.text" placeholder="示例：1.100万粉丝群 2.日活1000+产品"/>
+        <el-form-item label="我的资源" prop="resource">
+          <el-input type="textarea" v-model="form.resource" placeholder="示例：1.100万粉丝群 2.日活1000+产品"/>
         </el-form-item>
-        <el-form-item label="资源标签选择" prop="resource.tags" class="item-content">
-          <el-select v-model="form.resource.tags" placeholder="请选择">
+        <el-form-item label="资源标签选择" prop="resource_tag" class="item-content">
+          <el-select v-model="form.resource_tag" multiple placeholder="请选择">
+            <el-option v-for="item in resource" :key="item.id" :label="item.title" :value="item.id" />
           </el-select>
         </el-form-item>
         <div class="title">联系方式<span>（信息保密，仅用于高效对接）</span></div>
@@ -75,11 +77,11 @@
           <el-radio v-model="form.type" :label="2">公司</el-radio>
         </el-form-item>
         <el-form-item label="" prop="photo">
-          <UploadImg field="photo" @onSuccess="handleChoose" />
+          <UploadImg :url="form.photo" field="photo" @onSuccess="handleChoose" />
           <div class="item-content tip">{{ form.type === 1 ? '请上传个人工牌照' : '请上传公司营业执照' }}</div>
         </el-form-item>
         <el-form-item label="我的产品" prop="product_code">
-          <UploadImg field="product_code" @onSuccess="handleChoose" />
+          <UploadImg :url="form.product_code" field="product_code" @onSuccess="handleChoose" />
           <div class="item-content tip">请上传产品二维码</div>
         </el-form-item>
         <el-form-item label="是否显示产品图" v-if="form.product_code" prop="is_show" class="item-content">
@@ -88,7 +90,7 @@
         <el-form-item class="operate-btns">
           <template v-if="form.status === 0">
             <el-button type="primary" :loading="loading" @click="handleAudit(1)">通过</el-button>
-            <el-button :loading="loading" @click="handleAudit(0)">拒绝</el-button>
+            <el-button :loading="loading" @click="handleAudit(2)">拒绝</el-button>
           </template>
           <el-button v-if="!form.status && form.status !== 0" type="primary" :loading="loading" @click="handleSubmit">提交</el-button>
         </el-form-item>
@@ -143,14 +145,10 @@ export default {
         name: '',
         company: '',
         job: '',
-        needs: {
-          text: '',
-          tags: []
-        },
-        resource: {
-          text: '',
-          tags: []
-        },
+        needs: '',
+        needs_tag: [],
+        resource: '',
+        resource_tag: [],
         province: '',
         address: '',
         contact: '',
@@ -172,10 +170,10 @@ export default {
         job: [
           { required: true, message: '请输入您的职位' }
         ],
-        'needs.text': [
+        needs: [
           { required: true, message: '请输入我的需求' }
         ],
-        'resource.text': [
+        resource: [
           { required: true, message: '请输入我的资源' }
         ],
         province: [
@@ -201,20 +199,20 @@ export default {
         label: 'name',
         value: 'name',
         children: 'children'
-      }
+      },
+      needs: [],
+      resource: []
     };
   },
 
-  created () {
-    // if (this.id && this.id !== 'main') {
-    //   this.FIND(this.id).then(data => {
-    //     this.form = data;
-    //   })
-    // }
+  async created () {
+    await this.FETCH_TAGS('needs').then(data => { this.needs = data; });
+    await this.FETCH_TAGS('resource').then(data => { this.resource = data; });
+    this.getInfo();
   },
 
   methods: {
-    ...mapActions(['FIND', 'CREATE', 'EDIT']),
+    ...mapActions(['FETCH_TAGS', 'FIND', 'CREATE', 'AUDIT']),
 
     handleSubmit () {
       this.$refs.$createform.validate(async (valid) => {
@@ -237,12 +235,22 @@ export default {
       });
     },
 
+    getInfo () {
+      if (this.id && this.id !== 'main') {
+        this.FIND(this.id).then(({ data }) => {
+          this.form = data.data;
+        })
+      }
+    },
+
     handleChoose ({ field, data }) {
       this.form[field] = data.img;
     },
 
-    handleAudit (type) {
-      console.log(this.id, '通过/拒绝');
+    async handleAudit (status) {
+      await this.AUDIT({ id: this.id, status })
+      this.$message.success('操作成功')
+      this.getInfo();
     }
   }
 };

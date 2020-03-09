@@ -2,7 +2,7 @@
   <el-container class="app">
     <header class="header">
       <div class="header__title">
-        <span>系统后台</span>
+        <span>人脉圈后台管理系统</span>
       </div>
       <nav class="header-nav">
         <el-dropdown>

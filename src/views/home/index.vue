@@ -1,6 +1,8 @@
 <template>
   <div class="home">
-    home
+    <grid title="首页">
+      登陆成功
+    </grid>
   </div>
 </template>
 

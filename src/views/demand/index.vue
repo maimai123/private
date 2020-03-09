@@ -11,24 +11,25 @@
           <el-input
             placeholder="请输入微信昵称"
             class="search-input"
+            clearable
             auto-complete="off"
             @keyup.enter.native="fetch(1)"
             v-model="form.name"
           />
-          <el-select v-model="form.type" placeholder="请选择状态" class="search-select">
+          <el-select v-model="form.is_show" placeholder="请选择状态" clearable class="search-select">
             <el-option
-              v-for="item in TYPE_LIST"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
+              v-for="(item, key) in TYPE_LIST"
+              :key="key"
+              :label="item"
+              :value="key">
             </el-option>
           </el-select>
-          <el-select v-model="form.status" placeholder="请选择审核状态" class="search-select">
+          <el-select v-model="form.status" placeholder="请选择审核状态" clearable class="search-select">
             <el-option
-              v-for="item in STATUS_LIST"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
+              v-for="(item, key) in STATUS_LIST"
+              :key="key"
+              :label="item"
+              :value="key">
             </el-option>
           </el-select>
           <el-date-picker
@@ -47,19 +48,26 @@
       <el-table :data="list" border :resizable="false" stripe>
         <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
         <el-table-column prop="name" label="微信昵称" width="100"></el-table-column>
-        <el-table-column prop="name" label="创建时间" width="100"></el-table-column>
-        <el-table-column prop="name" label="被邀请合作次数"></el-table-column>
-        <el-table-column prop="name" label="达成合作意向次数"></el-table-column>
-        <el-table-column prop="name" label="产品图">
-          <!-- <el-switch slot-scope="scope" v-model="scope.row.extra.countdown"></el-switch> -->
+        <el-table-column prop="time_create" label="创建时间" width="170"></el-table-column>
+        <el-table-column prop="be_invite_times" label="被邀请合作次数"></el-table-column>
+        <el-table-column prop="success_times" label="达成合作意向次数"></el-table-column>
+        <el-table-column prop="status" label="审核状态">
+          <template slot-scope="scope">
+            <span>{{ STATUS_LIST[scope.row.status] }}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="name" label="审核状态"></el-table-column>
-        <el-table-column prop="name" label="状态"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column prop="is_show" label="状态">
+          <template slot-scope="scope">
+            <span>{{ TYPE_LIST[scope.row.is_show] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button v-if="scope.row.status === 0" @click="handleJump(scope.row.id)" type="text">审核</el-button>
             <el-button v-else @click="handleJump(scope.row.id)" type="text">查看详情</el-button>
-            <el-button @click="handleJump(scope.row.id)" type="text">{{ scope.row.is_show ? '隐藏' : '显示' }}</el-button>
+            <el-button @click="handleToggle(scope.row.id, scope.row.is_show ? 0 : 1 )" type="text">
+              {{ scope.row.is_show ? '隐藏' : '显示' }}产品图
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -93,7 +101,7 @@ export default {
     return {
       form: {
         name: '',
-        type: '',
+        is_show: '',
         status: '',
         daterange: ''
       },
@@ -114,7 +122,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['FETCH', 'AUDIT']),
+    ...mapActions(['FETCH', 'CHANGE_SHOW']),
 
     fetch (page) {
       this.current = page;
@@ -124,6 +132,12 @@ export default {
         ...this.form
       };
       this.FETCH(params);
+    },
+
+    async handleToggle (id, is_show) {
+      await this.CHANGE_SHOW({ id, is_show })
+      this.$message.success('操作成功');
+      this.fetch(this.current);
     },
 
     handleJump (id) {

@@ -6,8 +6,8 @@
   >
     <div
       class="avatar"
-      v-if="avatar"
-      :style="{ backgroundImage: avatar && `url(${avatar})` }"
+      v-if="url"
+      :style="{ backgroundImage: url && `url(${url})` }"
     />
     <i v-else class="el-icon-plus avatar-upload-icon"></i>
     <input
@@ -27,14 +27,13 @@ export default {
       type: String,
       require: true
     },
+    url: {
+      type: String,
+      require: false
+    },
     size: {
       type: String,
       default: 'default'
-    }
-  },
-  data () {
-    return {
-      avatar: ''
     }
   },
   methods: {
@@ -42,7 +41,6 @@ export default {
       const { files } = e.target;
       const { field } = this;
       await upload(field, files).then((data) => {
-        this.avatar = data.img;
         this.$emit('onSuccess', { field, data });
       });
     }
