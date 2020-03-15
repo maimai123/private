@@ -6,8 +6,8 @@ const onRequest = (req) => {
   if (params && params.daterange && params.daterange.length > 0) {
     params.time_start = params.daterange[0];
     params.time_end = params.daterange[1];
+    delete params.daterange;
   }
-  delete params.daterange;
   return { ...req, params };
 };
 const onRequestError = (err) => {

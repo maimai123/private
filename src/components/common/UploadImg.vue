@@ -75,6 +75,7 @@ export default {
     height: 100%;
     background-position: center;
     background-size: 100%;
+    background-repeat: no-repeat;
   }
 
   &:hover {
