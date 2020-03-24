@@ -6,7 +6,7 @@
     @close="handleCancel"
   >
     <el-form :model="form" :rules="rules" ref="$createForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="微信号" prop="name">
+      <el-form-item label="微信昵称" prop="name">
         <el-input v-model="form.name"></el-input>
       </el-form-item>
     </el-form>
@@ -40,7 +40,7 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入微信号' }
+          { required: true, message: '请输入微信昵称' }
         ]
       }
     };

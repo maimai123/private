@@ -8,11 +8,11 @@
         ref="form"
         label-width="110px"
       >
-        <el-form-item label="旧密码" prop="password">
-          <el-input v-model="data.password" placeholder="请输入密码"></el-input>
+        <el-form-item label="旧密码" prop="old_password">
+          <el-input type="password" v-model="data.old_password" placeholder="请输入密码"></el-input>
         </el-form-item>
-        <el-form-item label="新密码" prop="newPassword">
-          <el-input type="password" v-model="data.newPassword" placeholder="请输入新密码"></el-input>
+        <el-form-item label="新密码" prop="password">
+          <el-input type="password" v-model="data.password" placeholder="请输入新密码"></el-input>
         </el-form-item>
         <el-form-item label="再次输入密码" prop="rePassword">
           <el-input type="password" v-model="data.rePassword" placeholder="请再次输入密码"></el-input>
@@ -42,12 +42,12 @@ export default {
       lock: false,
       remind: 0,
       data: {
+        old_password: '',
         password: '',
-        newPassword: '',
         rePassword: ''
       },
       rules: {
-        password: [
+        old_password: [
           {
             required: true,
             min: 6,
@@ -56,7 +56,7 @@ export default {
             message: '密码由6-15位数字和字母组成'
           }
         ],
-        newPassword: [
+        password: [
           {
             required: true,
             pattern: /^[a-z0-9]{6,15}$/,
@@ -72,34 +72,21 @@ export default {
     };
   },
   methods: {
-    ...mapActions('user', ['PUT_PASSWORD', 'GET_CAPTCHA']),
-
-    onCaptcha () {
-      this.$refs.form.validateField('phone', async (err) => {
-        if (!err) {
-          await this.GET_CAPTCHA(this.data.phone);
-          this.remind = 60;
-          this.$message.success('发送成功');
-          this.timer = setInterval(() => {
-            this.remind -= 1;
-            if (this.remind === 0) clearInterval(this.timer);
-          }, 1000);
-        }
-      });
-    },
+    ...mapActions('user', ['CHANGE_PASSWORD']),
 
     handleSubmit () {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
           this.lock = true;
           try {
-            // await this.PUT_PASSWORD(this.data);
-            this.$alert('去登陆？', '修改成功', {
-              confirmButtonText: '确定',
-              callback: action => {
-                this.$router.push({ path: 'login' });
-              }
-            });
+            await this.CHANGE_PASSWORD(this.data);
+            this.$message.success('修改成功');
+            // this.$alert('去登陆？', '修改成功', {
+            //   confirmButtonText: '确定',
+            //   callback: action => {
+            //     this.$router.push({ path: 'login' });
+            //   }
+            // });
             this.lock = false;
           } catch (err) {
             this.lock = false;

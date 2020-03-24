@@ -140,6 +140,7 @@ export default {
       }).then(async () => {
         await this.OUT(row.id);
         this.$message({ type: 'success', message: '退群成功!' });
+        this.fetch(1);
       }).catch(() => {});
     }
   }

@@ -4,55 +4,46 @@ export default {
   namespaced: true,
   state: () => ({
     user: {},
-    access: {}
+    access: {
+      MENU_HOME: 1,
+      MENU_USERS: 1,
+      MENU_ORDER: 1,
+      MENU_DEMAND: 1,
+      MENU_TAGS: 1,
+      MENU_TOURISTS: 1
+    }
   }),
   getters: {},
   actions: {
     GET_USER ({ commit }) {
       return new Promise((resolve, reject) => {
-        // api.getUser().then((res) => {
-        //   commit('GET_USER', res.data);
-        //   resolve(res.data);
-        // }).catch((err) => {
-        //   reject(err);
-        // });
-        resolve();
-        commit('GET_USER', {
-          name: '麦麦',
-          avatar: 'https://avatars3.githubusercontent.com/u/15125340?s=60&v=4'
+        api.getUser().then((res) => {
+          commit('GET_USER', res.data);
+          resolve(res.data);
+        }).catch((err) => {
+          reject(err);
         });
       });
     },
     GET_ACCESS ({ commit }) {
       return new Promise((resolve, reject) => {
-        // api.getAccess().then((res) => {
-        //   commit('GET_ACCESS', res.data);
-        //   resolve(res.data);
-        // }).catch((err) => {
-        //   reject(err);
-        // });
-        resolve();
-        commit('GET_ACCESS', {
-          MENU_HOME: 1,
-          MENU_USERS: 1,
-          MENU_ORDER: 1,
-          MENU_DEMAND: 1,
-          MENU_TAGS: 1,
-          MENU_TOURISTS: 1
+        api.getAccess().then((res) => {
+          commit('GET_ACCESS', res.data);
+          resolve(res.data);
+        }).catch((err) => {
+          reject(err);
         });
       });
     },
     LOGIN ({ commit }, data) {
       return new Promise((resolve, reject) => {
-        // api.login(data).then((res) => {
-        //   commit('GET_USER', res.data);
-        //   resolve(res.data);
-        // }).catch((err) => {
-        //   commit('LOGIN_OUT');
-        //   reject(err);
-        // });
-        resolve();
-        commit('GET_USER', { status: true });
+        api.login(data).then((res) => {
+          commit('GET_USER', res.data);
+          resolve(res.data);
+        }).catch((err) => {
+          commit('LOGIN_OUT');
+          reject(err);
+        });
       });
     },
     LOGIN_OUT ({ commit }, data) {
@@ -70,11 +61,14 @@ export default {
     },
     PUT_PASSWORD ({ commit }, form) {
       return api.resetPassword(form);
+    },
+    CHANGE_PASSWORD ({ commit }, form) {
+      return api.changePassword(form);
     }
   },
   mutations: {
     GET_USER (state, data) {
-      state.user = data;
+      state.user = data.data;
     },
     GET_ACCESS (state, data) {
       state.access = data;

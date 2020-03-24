@@ -59,8 +59,8 @@ export default {
     ...mapActions(['FETCH_EQUITY_PRICE', 'EDIT_EQUITY_PRICE']),
 
     async open () {
-      await this.fetchData()
-      this.getSimditor();
+      await this.fetchData();
+      this.getSimditor(this.form.customer_rights);
       this.$refs.$createForm && this.$refs.$createForm.resetFields();
       this.visible = true;
       return new Promise(
@@ -71,10 +71,10 @@ export default {
     async fetchData () {
       await this.FETCH_EQUITY_PRICE().then(({ data }) => {
         this.form = data.data;
-      })
+      });
     },
 
-    getSimditor () {
+    getSimditor (text) {
       import('simditor').then(({ default: Simditor }) => {
         this.simditor = new Simditor({
           textarea: this.$refs.$textarea,
@@ -95,7 +95,7 @@ export default {
             leaveConfirm: '正在上传文件，如果离开上传会自动取消'
           }
         });
-        this.simditor.setValue(this.form.customer_rights);
+        this.simditor.setValue(text || this.form.customer_rights);
       });
     },
 

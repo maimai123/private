@@ -39,7 +39,7 @@
         <el-table-column prop="title" label="标签名称" width="100"></el-table-column>
         <el-table-column prop="category" label="分类" width="100">
           <template slot-scope="scope">
-            {{ category[scope.row.category] }}
+            {{ scope.row.category.split(',').map(item => category[item]).join(',') }}
           </template>
         </el-table-column>
         <el-table-column prop="time_create" label="创建时间"></el-table-column>

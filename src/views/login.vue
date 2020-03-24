@@ -9,8 +9,8 @@
         ref="login"
         label-width="70px"
       >
-        <el-form-item label="账号" prop="phone">
-          <el-input v-model="data.phone"></el-input>
+        <el-form-item label="账号" prop="name">
+          <el-input v-model="data.name"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="data.password"></el-input>
@@ -33,14 +33,14 @@ export default {
     return {
       lock: false,
       data: {
-        phone: '',
+        name: '',
         password: ''
       },
       rules: {
-        phone: [
+        name: [
           {
             required: true,
-            pattern: /^1[34578]\d{9}$/,
+            pattern: /^1[345789]\d{9}$/,
             message: '请输入正确的手机号'
             // trigger: 'blur',
           }
@@ -69,7 +69,7 @@ export default {
             if (redirect) {
               window.location.href = redirect;
             } else {
-              this.$router.push({ path: 'home' });
+              this.$router.push({ path: '/users' });
             }
             this.lock = false;
           } catch (err) {

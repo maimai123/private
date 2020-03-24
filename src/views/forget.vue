@@ -10,11 +10,11 @@
         label-width="110px"
       >
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="data.phone" placeholder="请输入手机号"></el-input>
+          <el-input v-model="data.phone" autocomplete="off" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item label="验证码" prop="code">
           <el-row type="flex" align="middle">
-            <el-input class="code-input" v-model="data.code" placeholder="请输入验证码"></el-input>
+            <el-input class="code-input" autocomplete="off" v-model="data.code" placeholder="请输入验证码"></el-input>
             <el-button
               @click="onCaptcha"
               :disabled="remind > 0"
@@ -27,10 +27,10 @@
           </el-row>
         </el-form-item>
         <el-form-item label="新密码" prop="password">
-          <el-input type="password" v-model="data.password" placeholder="请输入密码"></el-input>
+          <el-input type="password" autocomplete="off" v-model="data.password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item label="再次输入密码" prop="rePassword">
-          <el-input type="password" v-model="data.rePassword" placeholder="请再次输入密码"></el-input>
+          <el-input type="password" autocomplete="off" v-model="data.rePassword" placeholder="请再次输入密码"></el-input>
         </el-form-item>
         <el-form-item class="forget-operate">
           <el-button class="forget-submit" :loading="lock" native-type="handleSubmit" type="primary">确定</el-button>
@@ -41,6 +41,7 @@
 </template>
 <script>
 import { mapActions } from 'vuex';
+import * as api from '@/api/user';
 
 export default {
   data () {
@@ -113,9 +114,11 @@ export default {
     handleSubmit () {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
+          const { phone, code, password } = this.data;
           this.lock = true;
           try {
-            // await this.PUT_PASSWORD(this.data);
+            await api.validateCaptcha({ phone, code });
+            await this.PUT_PASSWORD({ phone, password });
             this.$alert('去登陆？', '修改成功', {
               confirmButtonText: '确定',
               callback: action => {

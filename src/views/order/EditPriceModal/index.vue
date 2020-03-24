@@ -75,12 +75,14 @@ export default {
     async fetchData () {
       await this.FETCH_EQUITY_PRICE().then(({ data }) => {
         this.form = data.data;
+        this.form.price = this.form.price / 100 || 0;
       })
     },
 
     handleSubmit () {
       this.$refs.$createForm.validate(async (valid) => {
         if (valid) {
+          this.form.price *= 100;
           await this.EDIT_EQUITY_PRICE(this.form);
           this.$message.success('修改成功')
           this.visible = false;

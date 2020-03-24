@@ -7,13 +7,13 @@
       <nav class="header-nav">
         <el-dropdown>
           <span class="el-dropdown-link">
-            <img class="header-nav__avatar" :src="user.avatar">
+            <!-- <img class="header-nav__avatar" :src="user.avatar"> -->
             <span class="header-nav__name">{{ user.name }}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <router-link :to="{ name: 'reset' }"><el-dropdown-item>修改密码</el-dropdown-item></router-link>
-            <el-dropdown-item @click="onLogout">退出</el-dropdown-item>
+            <div @click="handleLogout"><el-dropdown-item>退出</el-dropdown-item></div>
           </el-dropdown-menu>
         </el-dropdown>
       </nav>
@@ -55,27 +55,18 @@ export default {
   data () {
     return {
       sidebar: [
-        { item: '首页', name: 'home', access: 'MENU_HOME' },
+        // { item: '首页', name: 'home', access: 'MENU_HOME' },
         { item: '用户管理', name: 'users', access: 'MENU_USERS' },
         { item: '需求管理', name: 'demand', access: 'MENU_DEMAND' },
         { item: '订单管理', name: 'order', access: 'MENU_ORDER' },
         { item: '标签管理', name: 'tags', access: 'MENU_TAGS' },
         { item: '优质游客圈', name: 'tourists', access: 'MENU_TOURISTS' }
-        // {
-        //   item: 'about',
-        //   name: 'about',
-        //   access: 'MENU_ABOUT',
-        //   sub: [
-        //     { item: '名字', name: 'about' }
-        //   ]
-        // }
-        // { item: '定时任务', name: 'cron', access: 'MENU_CRON' },
       ]
     };
   },
 
   mounted () {
-    this.GET_ACCESS();
+    this.GET_USER();
   },
 
   computed: {
@@ -100,7 +91,7 @@ export default {
       this.$router.push({ name }).catch(err => {});
     },
 
-    onLogout () {
+    handleLogout () {
       this.$confirm('退出系统？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',

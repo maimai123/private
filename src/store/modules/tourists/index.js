@@ -17,6 +17,9 @@ export default {
         });
       });
     },
+    CREATE ({ commit }, params) {
+      return api.create(params);
+    },
     OUT ({ commit }, id) {
       return api.out(id);
     }

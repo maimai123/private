@@ -15,6 +15,14 @@ const onRequestError = (err) => {
 };
 
 const onResponse = (res) => {
+  if (res.data.errcode) {
+    MessageBox({
+      message: res.data.errmsg,
+      title: res.data.errcode,
+      type: 'error'
+    });
+    return Promise.reject(res.data);
+  }
   return Promise.resolve(res);
 };
 const onResponseError = (err) => {
