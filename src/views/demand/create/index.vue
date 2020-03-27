@@ -57,7 +57,9 @@
         <el-form-item label="地址">
           <div class="flex">
             <el-form-item label="" prop="city" class="item-content">
+              <span v-if="this.id && this.id !== 'main'">{{ form.city }}</span>
               <el-cascader
+                v-else
                 :options="location"
                 :props="format"
                 :separator="'-'"
@@ -242,7 +244,6 @@ export default {
       if (this.id && this.id !== 'main') {
         this.FIND(this.id).then(({ data }) => {
           this.form = data.data;
-          this.form.city = this.form.city.split(',');
         })
       }
     },

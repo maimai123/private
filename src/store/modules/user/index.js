@@ -25,16 +25,16 @@ export default {
         });
       });
     },
-    GET_ACCESS ({ commit }) {
-      return new Promise((resolve, reject) => {
-        api.getAccess().then((res) => {
-          commit('GET_ACCESS', res.data);
-          resolve(res.data);
-        }).catch((err) => {
-          reject(err);
-        });
-      });
-    },
+    // GET_ACCESS ({ commit }) {
+    //   return new Promise((resolve, reject) => {
+    //     api.getAccess().then((res) => {
+    //       commit('GET_ACCESS', res.data);
+    //       resolve(res.data);
+    //     }).catch((err) => {
+    //       reject(err);
+    //     });
+    //   });
+    // },
     LOGIN ({ commit }, data) {
       return new Promise((resolve, reject) => {
         api.login(data).then((res) => {

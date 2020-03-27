@@ -28,9 +28,6 @@ export default {
     },
     DELETE ({ commit }, data) {
       return api.del(data);
-    },
-    AUDIT ({ commit }, { id, data }) {
-      return api.audit(id, data);
     }
   },
   mutations: {

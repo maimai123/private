@@ -82,8 +82,8 @@ export default {
     handleSubmit () {
       this.$refs.$createForm.validate(async (valid) => {
         if (valid) {
-          this.form.price *= 100;
-          await this.EDIT_EQUITY_PRICE(this.form);
+          const { price } = this.form;
+          await this.EDIT_EQUITY_PRICE({ ...this.form, price: price * 100 });
           this.$message.success('修改成功')
           this.visible = false;
           return this._resolve(true);
