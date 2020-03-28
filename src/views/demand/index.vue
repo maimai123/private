@@ -46,7 +46,7 @@
       </div>
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe>
-        <el-table-column prop="id" label="用户ID" width="100"></el-table-column>
+        <el-table-column prop="id" label="需求ID" width="100"></el-table-column>
         <el-table-column prop="name" label="微信昵称" width="100"></el-table-column>
         <el-table-column prop="time_create" label="创建时间" width="170"></el-table-column>
         <el-table-column prop="be_invite_times" label="被邀请合作次数"></el-table-column>

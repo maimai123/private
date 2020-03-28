@@ -36,7 +36,7 @@
       </div>
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe>
-        <el-table-column prop="title" label="标签名称" width="100"></el-table-column>
+        <el-table-column prop="title" label="标签名称"></el-table-column>
         <el-table-column prop="category" label="分类" width="100">
           <template slot-scope="scope">
             {{ scope.row.category.split(',').map(item => category[item]).join(',') }}

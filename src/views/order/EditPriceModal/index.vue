@@ -7,7 +7,7 @@
   >
     <el-form :model="form" :rules="rules" ref="$createForm" label-width="60px">
       <el-form-item label="天数" prop="days">
-        <el-input v-model="form.days"></el-input>
+        <el-input disabled v-model="form.days"></el-input>
       </el-form-item>
       <el-form-item label="价格" prop="price">
         <el-input v-model="form.price"></el-input>

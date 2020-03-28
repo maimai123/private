@@ -5,7 +5,7 @@ import { http } from '@/api';
  * @param Object
  */
 export const fetchTags = (category) => {
-  return http.get('operation/tag/index', { params: { category } });
+  return http.get('operation/needs/index', { params: { category } });
 };
 
 /**
@@ -26,7 +26,7 @@ export const find = id => http.get('operation/needs/detail', { params: { id } })
  * 显隐
  * @param Number id is_show
  */
-export const change = (id, is_show) => http.get('operation/tag/change-show', { params: { id, is_show } });
+export const change = (id, is_show) => http.get('operation/needs/change-show', { params: { id, is_show } });
 
 /**
  * 新增

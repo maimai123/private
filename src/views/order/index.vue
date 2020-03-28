@@ -33,12 +33,12 @@
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe @selection-change="onSelectionChange">
         <el-table-column type="selection"></el-table-column>
-        <el-table-column prop="order_sn" label="订单号" width="150"></el-table-column>
+        <el-table-column prop="order_sn" label="订单号" width="200"></el-table-column>
         <el-table-column prop="name" label="微信昵称"></el-table-column>
         <el-table-column prop="pay_type" label="支付方式" width="100"></el-table-column>
         <el-table-column prop="amount" label="充值金额">
           <template slot-scope="scope">
-            {{ scope.row.amount ? scope.row.amount / 1000 : 0 }}
+            {{ scope.row.amount ? scope.row.amount / 100 : 0 }}
           </template>
         </el-table-column>
         <el-table-column prop="time_create" label="充值时间"></el-table-column>
@@ -115,6 +115,8 @@ export default {
     async handleDelete () {
       if (this.selection) {
         await this.DELETE(this.selection);
+        this.$message.success('删除成功！');
+        await this.fetch(1);
       } else {
         this.$message.info('请选择要删除的订单');
       }

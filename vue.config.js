@@ -18,7 +18,7 @@ module.exports = {
     hotOnly: true, // 是否开启热更新
     proxy: {
       '/api': {
-        target: 'http://116.62.187.181'
+        target: 'http://rmq.duoge.work'
       }
     }
   }

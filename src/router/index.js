@@ -22,7 +22,7 @@ const routes = [
     path: '/',
     name: 'index',
     meta: { requiresAuth: true },
-    redirect: { name: 'home' }
+    redirect: { name: 'users' }
   },
   {
     path: '/login',
