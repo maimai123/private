@@ -54,7 +54,7 @@
           </el-select>
         </el-form-item>
         <div class="title">联系方式<span>（信息保密，仅用于高效对接）</span></div>
-        <el-form-item label="地址">
+        <el-form-item label="地址" prop="city">
           <div class="flex">
             <el-form-item label="" prop="city" class="item-content">
               <span v-if="this.id && this.id !== 'main'">{{ form.city }}</span>

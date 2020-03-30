@@ -14,7 +14,7 @@
           <el-checkbox v-for="(item, key) in category" :label="key" :key="key">{{item}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="操作" prop="state" class="item-content">
+      <el-form-item label="操作" prop="is_show" class="item-content">
         <el-radio-group v-model="form.is_show">
           <el-radio v-for="(item, key) in is_show" :label="key" :key="key">{{item}}</el-radio>
         </el-radio-group>
@@ -56,7 +56,7 @@ export default {
       form: {
         title: '',
         category: [],
-        is_show: []
+        is_show: '1'
       },
       rules: {
         title: [

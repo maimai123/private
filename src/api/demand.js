@@ -5,7 +5,7 @@ import { http } from '@/api';
  * @param Object
  */
 export const fetchTags = (category) => {
-  return http.get('operation/needs/index', { params: { category } });
+  return http.get('operation/tag/index', { params: { category } });
 };
 
 /**
