@@ -1,4 +1,4 @@
-import * as api from '@/api/tags';
+import * as api from '@/api/members';
 
 export default {
   namespaced: true,
@@ -17,8 +17,8 @@ export default {
         });
       });
     },
-    CHANGE_SHOW ({ commit }, { id, is_show }) {
-      return api.change(id, is_show);
+    CHANGE_SHOW ({ commit }, { id }) {
+      return api.change(id);
     },
     CREATE ({ commit }, data) {
       return api.create(data);

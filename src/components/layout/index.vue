@@ -60,7 +60,10 @@ export default {
         { item: '需求管理', name: 'demand', access: 'MENU_DEMAND' },
         { item: '订单管理', name: 'order', access: 'MENU_ORDER' },
         { item: '标签管理', name: 'tags', access: 'MENU_TAGS' },
-        { item: '优质游客圈', name: 'tourists', access: 'MENU_TOURISTS' }
+        { item: '优质游客圈', name: 'tourists', access: 'MENU_TOURISTS' },
+        { item: '会员套餐', name: 'members', access: 'MENU_MEMBERS' },
+        { item: '提现审核', name: 'withdraw', access: 'MENU_WITHDRAW' },
+        { item: '设置', name: 'setting', access: 'MENU_SETTING' }
       ]
     };
   },

@@ -1,4 +1,4 @@
-import * as api from '@/api/tags';
+import * as api from '@/api/withdraw';
 
 export default {
   namespaced: true,
@@ -17,14 +17,14 @@ export default {
         });
       });
     },
-    CHANGE_SHOW ({ commit }, { id, is_show }) {
-      return api.change(id, is_show);
+    CHANGE ({ commit }, { id, status, reason }) {
+      return api.change({ id, status, reason });
     },
-    CREATE ({ commit }, data) {
-      return api.create(data);
+    GET_INTRO ({ commit }) {
+      return api.getInstruction();
     },
-    EDIT ({ commit }, { id, data }) {
-      return api.edit(id, data);
+    SET_INTRO ({ commit }, data) {
+      return api.setInstruction(data);
     },
     DELETE ({ commit }, data) {
       return api.del({ ids: data.join(',') });

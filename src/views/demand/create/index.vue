@@ -10,7 +10,7 @@
           审核状态: {{ STATUS_LIST[form.status] }}
         </div>
       </div>
-      <el-form style="width: 600px;" :model="form" :rules="rules" ref="$createform" label-width="110px">
+      <el-form style="width: 600px;" :model="form" :rules="rules" ref="$createform" label-width="116px">
         <div class="title">基本信息</div>
         <el-row>
           <el-col :span="12">
@@ -88,11 +88,12 @@
         <el-form-item label="我的产品" prop="product_code">
           <UploadImg v-if="!isEdit" :url="form.product_code" field="product_code" @onSuccess="handleChoose" />
           <img class="photo" v-if="isEdit && form.product_code" :src="form.product_code" alt="avatar">
+          <span v-if="isEdit && !form.product_code">暂无图片</span>
           <div v-if="!isEdit" class="item-content tip">请上传产品二维码</div>
         </el-form-item>
-        <el-form-item label="是否显示产品图" v-if="form.product_code" prop="is_show" class="item-content">
+        <!-- <el-form-item label="是否显示产品图" v-if="form.product_code" prop="is_show" class="item-content">
           <el-switch :disabled="isEdit" v-model="form.is_show" :active-value="1" :inactive-value="0" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item class="operate-btns">
           <template v-if="form.status === 0">
             <el-button type="primary" :loading="loading" @click="handleAudit(1)">通过</el-button>
@@ -261,8 +262,9 @@ export default {
 
     async handleAudit (status) {
       await this.AUDIT({ id: this.id, status })
-      this.$message.success('操作成功')
-      this.getInfo();
+      this.$message.success('操作成功');
+      this.$router.push({ name: 'demand' });
+      // this.getInfo();
     }
   }
 };

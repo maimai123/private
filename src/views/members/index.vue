@@ -1,65 +1,37 @@
 
 <template>
-  <div class="tags">
-    <grid title="标签列表">
+  <div class="members">
+    <grid title="会员套餐管理">
       <!-- 搜索 -->
-      <div class="tags-search">
+      <div class="members-search">
         <div>
-          <el-button type="primary" @click="handleCreate">新建</el-button>
+          <el-button type="primary" @click="handleCreate()">新建</el-button>
           <el-button type="primary" @click="handleDelete">删除</el-button>
-        </div>
-        <div class="operate">
-          <el-select v-model="form.is_show" clearable placeholder="请选择状态" class="search-select">
-            <el-option label="显示" :value="1"></el-option>
-            <el-option label="隐藏" :value="0"></el-option>
-          </el-select>
-          <el-select v-model="form.category" clearable placeholder="请选择分类" class="search-select">
-            <el-option
-              v-for="(item, key) in category"
-              :key="key"
-              :label="item"
-              :value="key">
-            </el-option>
-          </el-select>
-          <el-input
-            placeholder="标签名称"
-            class="search-input"
-            auto-complete="off"
-            clearable
-            @keyup.enter.native="fetch(1)"
-            v-model="form.title"
-          />
-          <el-date-picker
-            v-model="form.daterange"
-            type="daterange"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            style="width: 250px;"
-          />
-          <el-button type="primary" @click="fetch(1)">搜索</el-button>
         </div>
       </div>
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe @selection-change="onSelectionChange">
         <el-table-column type="selection"></el-table-column>
-        <el-table-column prop="title" label="标签名称"></el-table-column>
-        <el-table-column prop="category" label="分类" width="100">
+        <el-table-column type="index" label="序号"></el-table-column>
+        <el-table-column prop="title" label="名称"></el-table-column>
+        <el-table-column prop="price" label="价格" width="100">
           <template slot-scope="scope">
-            {{ scope.row.category.split(',').map(item => category[item]).join(',') }}
+            {{ scope.row.price / 100 }}
           </template>
         </el-table-column>
-        <el-table-column prop="time_create" label="创建时间"></el-table-column>
-        <el-table-column prop="is_show" label="状态">
+        <el-table-column prop="days" label="天数"></el-table-column>
+        <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
-            {{ scope.row.is_show === 1 ? '显示' : '隐藏' }}
+            {{ scope.row.status === 1 ? '上线' : '下线' }}
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="small" @click="handleToggle(scope.row.id, scope.row.is_show ? 0 : 1)" type="text">
-              {{ scope.row.is_show === 1 ? '隐藏' : '显示' }}
+            <el-button size="small" @click="handleToggle(scope.row.id)" type="text">
+              {{ scope.row.status === 1 ? '下线' : '上线' }}
+            </el-button>
+            <el-button size="small" @click="handleCreate(scope.row)" type="text">
+              编辑
             </el-button>
           </template>
         </el-table-column>
@@ -79,7 +51,7 @@
 
 <script>
 /*
-  name: tags => index.vue
+  name: members => index.vue
   desc: 标签管理
   author: 麦麦
   version：v1.0.0
@@ -88,7 +60,7 @@
 import CreateTag from './create';
 import { createNamespacedHelpers } from 'vuex';
 
-const { mapState, mapActions } = createNamespacedHelpers('tags');
+const { mapState, mapActions } = createNamespacedHelpers('members');
 
 export default {
   data () {
@@ -132,14 +104,14 @@ export default {
       this.FETCH(params);
     },
 
-    handleCreate () {
-      this.$refs.$createModal.open().then(() => {
+    handleCreate (row) {
+      this.$refs.$createModal.open(row).then(() => {
         this.fetch(this.current);
       });
     },
 
-    async handleToggle (id, is_show) {
-      await this.CHANGE_SHOW({ id, is_show })
+    async handleToggle (id) {
+      await this.CHANGE_SHOW({ id })
       this.$message.success('操作成功');
       this.fetch(this.current);
     },

@@ -34,6 +34,6 @@ export const edit = (id, data) => {
  * 删除
  * @param Number id
  */
-export const del = (id) => {
-  return http.delete('operation/tag/index', { id });
+export const del = (data) => {
+  return http.get('operation/tag/delete', { params: data });
 };

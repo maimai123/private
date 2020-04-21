@@ -10,7 +10,10 @@ export default {
       MENU_ORDER: 1,
       MENU_DEMAND: 1,
       MENU_TAGS: 1,
-      MENU_TOURISTS: 1
+      MENU_TOURISTS: 1,
+      MENU_MEMBERS: 1,
+      MENU_WITHDRAW: 1,
+      MENU_SETTING: 1
     }
   }),
   getters: {},

@@ -16,3 +16,7 @@ export const getCaptcha = phone => http.get('operation/tool/phone-code', { param
 export const validateCaptcha = params => http.get('front/tool/validate-code', { params });
 
 // export const getAccess = () => http.get('admin/access', { message: false });
+
+// 设置
+export const getSetting = () => http.get('operation/rights/rebate-setting');
+export const setSetting = (params) => http.post('operation/rights/rebate-setting', params);

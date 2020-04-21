@@ -6,6 +6,8 @@ import demandModule from '@/store/modules/demand'
 import orderModule from '@/store/modules/order'
 import tagsModule from '@/store/modules/tags'
 import touristsModule from '@/store/modules/tourists'
+import membersModule from '@/store/modules/members'
+import withdrawModule from '@/store/modules/withdraw'
 
 Vue.use(Vuex)
 
@@ -22,6 +24,8 @@ export default new Vuex.Store({
     demand: demandModule,
     order: orderModule,
     tags: tagsModule,
-    tourists: touristsModule
+    tourists: touristsModule,
+    members: membersModule,
+    withdraw: withdrawModule
   }
 })
