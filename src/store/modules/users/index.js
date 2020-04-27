@@ -19,6 +19,9 @@ export default {
     },
     EDIT ({ commit }, { id, data }) {
       return api.edit(id, data);
+    },
+    CHANGE ({ commit }, id) {
+      return api.change(id);
     }
   },
   mutations: {

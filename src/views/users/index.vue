@@ -37,11 +37,14 @@
         <el-table-column prop="success_times" label="成功合作次数"></el-table-column>
         <el-table-column prop="type" label="操作">
           <template slot-scope="scope">
-            <router-link :to="{ name: 'demand', query: { name: scope.row.name } }">
-              <el-button size="small" type="text">
+            <el-button size="small" type="text">
+              <router-link :to="{ name: 'demand', query: { name: scope.row.name } }">
                 查看需求
-              </el-button>
-            </router-link>
+              </router-link>
+            </el-button>
+            <el-button size="small" type="text" @click="handleChange(scope.row.id)">
+              {{ scope.row.status === 0 ? '冻结' : '解冻' }}
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -90,7 +93,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['FETCH']),
+    ...mapActions(['FETCH', 'CHANGE']),
 
     fetch (page) {
       this.current = page;
@@ -100,6 +103,12 @@ export default {
         ...this.form
       };
       this.FETCH(params);
+    },
+
+    async handleChange (id) {
+      await this.CHANGE(id);
+      this.$message.success('操作成功');
+      this.fetch(1);
     }
   }
 };

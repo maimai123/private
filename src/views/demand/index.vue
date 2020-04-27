@@ -61,6 +61,11 @@
             <span>{{ TYPE_LIST[scope.row.is_show] }}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="create_by" label="类型">
+          <template slot-scope="scope">
+            <span>{{ scope.row.create_by === 0 ? '用户发送' : '后台发送' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button v-if="scope.row.status === 0" @click="handleJump(scope.row.id)" type="text">审核</el-button>

@@ -27,7 +27,7 @@ export const change = (id, is_show) => http.get('operation/tag/change-show', { p
  * @param Object id
  */
 export const edit = (id, data) => {
-  return http.put('operation/tag/create', { id, ...data });
+  return http.post(`operation/tag/update?id=${id}`, data);
 };
 
 /**

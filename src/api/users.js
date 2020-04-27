@@ -17,6 +17,14 @@ export const edit = (id, data) => {
 };
 
 /**
+ * 用户冻结/解冻
+ * @param id
+ */
+export const change = (id) => {
+  return http.get(`operation/customer/change-status?id=${id}`);
+};
+
+/**
  * 删除用户
  * @param Number id
  */

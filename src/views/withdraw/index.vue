@@ -135,18 +135,17 @@ export default {
         cancelButtonText: '取消',
         inputPattern: /^.{0,300}$/,
         inputType: 'textarea',
-        inputValue: data,
+        inputValue: data?.data?.withdraw_setting || '',
         inputErrorMessage: '提现说明最多300个'
       }).then(async ({ value }) => {
-        console.log(value);
-        await this.SET_INTRO({ value });
+        await this.SET_INTRO({ withdraw_setting: value });
         this.$message.success('操作成功');
       });
     },
 
     async handleVerity (type, row) {
       /* eslint-disable */
-      const { id, status, name = '-', time_create = '-', money, time_update = '-', reason = '-' } = row;
+      const { id, status, name = '-', time_create = '-', money = '0', time_update = '-', fail_reason = '-' } = row;
       switch (type) {
         case STATUS_FORMAT.PASS:
           this.$confirm('您确定要通过吗?', '提示', {
@@ -167,7 +166,7 @@ export default {
             inputPattern: /^.{3,100}$/,
             inputErrorMessage: '拒绝理由最少3个字最多100个'
           }).then(async ({ value }) => {
-            await this.CHANGE({ id, status: type, reason: value });
+            await this.CHANGE({ id, status: type, fail_reason: value });
             this.$message.success('操作成功');
             this.fetch(this.current);
           });
@@ -179,7 +178,7 @@ export default {
               <div><span>提现金额：${money ? money / 100 : 0}</span><span>审核时间：${time_update}</span></div>
               ${
                 status === 2 ? `<div>拒绝理由：</div>
-              <div>${reason}</div>` : ''
+              <div>${fail_reason}</div>` : ''
               }
             </div>
           `, `详情（${status === 1 ? '已通过' : '已拒绝'}）`, {

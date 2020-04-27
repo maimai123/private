@@ -21,7 +21,7 @@ export const create = (data) => {
  * @param Object
  */
 export const getInstruction = () => {
-  return http.get('operation/withdraw/Instruction');
+  return http.get('operation/withdraw/setting');
 }
 
 /**
@@ -29,14 +29,14 @@ export const getInstruction = () => {
  * @param Object
  */
 export const setInstruction = (params) => {
-  return http.post('operation/withdraw/Instruction', params);
+  return http.post('operation/withdraw/setting', params);
 }
 
 /**
  * 切换状态
  * @param Number id
  */
-export const change = ({ id, status, reason }) => http.get('operation/withdraw/verity', { params: { id, status, reason } });
+export const change = ({ id, status, fail_reason }) => http.get('operation/withdraw/verify', { params: { id, status, fail_reason } });
 
 /**
  * 修改

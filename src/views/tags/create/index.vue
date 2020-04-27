@@ -11,7 +11,7 @@
       </el-form-item>
       <el-form-item label="分类" prop="category">
         <el-checkbox-group v-model="form.category" class="item-content">
-          <el-checkbox v-for="(item, key) in category" :label="key" :key="key">{{item}}</el-checkbox>
+          <el-checkbox v-for="(item, key) in category" :label="key" :key="item">{{item}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="操作" prop="is_show" class="item-content">
@@ -73,10 +73,15 @@ export default {
   },
 
   methods: {
-    ...mapActions(['CREATE']),
+    ...mapActions(['CREATE', 'EDIT']),
 
-    open () {
+    open (row) {
       this.$refs.$createForm && this.$refs.$createForm.resetFields();
+      if (row) {
+        this.form = { ...row, category: row.category ? row.category.split(',') : [], is_show: row.is_show + '' };
+      } else {
+        this.form = { title: '', category: [], is_show: '1' }
+      }
       this.visible = true;
       return new Promise(
         (resolve, reject) => { this._resolve = resolve; this._reject = reject; }
@@ -84,10 +89,14 @@ export default {
     },
 
     handleSubmit () {
-      const { category, is_show } = this.form;
+      const { category, is_show, id = null } = this.form;
       this.$refs.$createForm.validate(async (valid) => {
         if (valid) {
-          await this.CREATE({ ...this.form, category: category.join(',') });
+          if (id) {
+            await this.EDIT({ id, data: { ...this.form, category: category.join(',') } });
+          } else {
+            await this.CREATE({ ...this.form, category: category.join(',') });
+          }
           this.visible = false;
           return this._resolve(true);
         }
@@ -97,6 +106,8 @@ export default {
     handleCancel () {
       this._reject();
       this.visible = false;
+      this.$refs.$createForm.resetFields();
+      this.form = { title: '', category: [], is_show: '1' }
     }
   }
 };

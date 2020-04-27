@@ -5,7 +5,7 @@
       <!-- 搜索 -->
       <div class="tags-search">
         <div>
-          <el-button type="primary" @click="handleCreate">新建</el-button>
+          <el-button type="primary" @click="handleCreate()">新建</el-button>
           <el-button type="primary" @click="handleDelete">删除</el-button>
         </div>
         <div class="operate">
@@ -61,6 +61,7 @@
             <el-button size="small" @click="handleToggle(scope.row.id, scope.row.is_show ? 0 : 1)" type="text">
               {{ scope.row.is_show === 1 ? '隐藏' : '显示' }}
             </el-button>
+            <el-button size="small" @click="handleCreate(scope.row)" type="text">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -132,8 +133,8 @@ export default {
       this.FETCH(params);
     },
 
-    handleCreate () {
-      this.$refs.$createModal.open().then(() => {
+    handleCreate (row) {
+      this.$refs.$createModal.open(row).then(() => {
         this.fetch(this.current);
       });
     },

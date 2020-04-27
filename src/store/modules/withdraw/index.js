@@ -17,8 +17,8 @@ export default {
         });
       });
     },
-    CHANGE ({ commit }, { id, status, reason }) {
-      return api.change({ id, status, reason });
+    CHANGE ({ commit }, { id, status, fail_reason }) {
+      return api.change({ id, status, fail_reason });
     },
     GET_INTRO ({ commit }) {
       return api.getInstruction();
