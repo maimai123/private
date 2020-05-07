@@ -8,6 +8,13 @@
           <el-button type="primary" @click="handleCreate()">新建</el-button>
           <el-button type="primary" @click="handleDelete">删除</el-button>
         </div>
+        <div class="operate">
+          <el-select v-model="form.status" clearable placeholder="请选择状态" class="search-select">
+            <el-option label="上线" :value="1"></el-option>
+            <el-option label="下线" :value="0"></el-option>
+          </el-select>
+          <el-button type="primary" @click="fetch(1)">搜索</el-button>
+        </div>
       </div>
       <!-- 表格 -->
       <el-table :data="list" border :resizable="false" stripe @selection-change="onSelectionChange">
@@ -66,10 +73,7 @@ export default {
   data () {
     return {
       form: {
-        title: '',
-        is_show: '',
-        daterange: '',
-        category: ''
+        status: ''
       },
       category: {
         needs: '需求',

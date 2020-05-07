@@ -46,10 +46,10 @@ export const edit = (id, data) => {
 
 /**
  * 删除
- * @param Number id
+ * @param String data
  */
-export const del = (id) => {
-  return http.delete(`demand/list/${id}`);
+export const del = (data) => {
+  return http.get('operation/needs/delete', { params: data });
 };
 
 /**

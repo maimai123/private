@@ -4,10 +4,21 @@
     <grid title="需求管理">
       <!-- 搜索 -->
       <div class="demand-search">
-        <router-link :to="{ name: 'demand/create' }">
-          <el-button type="primary">发布需求</el-button>
-        </router-link>
+        <div class="btns">
+          <router-link :to="{ name: 'demand/create' }">
+            <el-button type="primary">发布需求</el-button>
+          </router-link>
+          <el-button type="primary" @click="handleDelete">删除</el-button>
+        </div>
         <div class="operate">
+          <el-select v-model="form.create_by" placeholder="请选择类型" clearable class="search-select">
+            <el-option
+              v-for="(item, key) in CREATE_BY_LIST"
+              :key="key"
+              :label="item"
+              :value="key">
+            </el-option>
+          </el-select>
           <el-input
             placeholder="请输入微信昵称"
             class="search-input"
@@ -45,7 +56,8 @@
         </div>
       </div>
       <!-- 表格 -->
-      <el-table :data="list" border :resizable="false" stripe>
+      <el-table :data="list" border :resizable="false" stripe @selection-change="onSelectionChange">
+        <el-table-column type="selection"></el-table-column>
         <el-table-column type="index" width="60"></el-table-column>
         <el-table-column prop="name" label="微信昵称" width="100"></el-table-column>
         <el-table-column prop="time_create" label="创建时间" width="170"></el-table-column>
@@ -97,7 +109,7 @@
 */
 
 import { createNamespacedHelpers } from 'vuex';
-import { TYPE_LIST, STATUS_LIST } from './constants';
+import { TYPE_LIST, STATUS_LIST, CREATE_BY_LIST } from './constants';
 
 const { mapState, mapActions } = createNamespacedHelpers('demand');
 
@@ -112,7 +124,8 @@ export default {
       },
       current: 1,
       TYPE_LIST,
-      STATUS_LIST
+      STATUS_LIST,
+      CREATE_BY_LIST
     };
   },
 
@@ -127,7 +140,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['FETCH', 'CHANGE_SHOW']),
+    ...mapActions(['FETCH', 'CHANGE_SHOW', 'DELETE']),
 
     fetch (page) {
       this.current = page;
@@ -137,6 +150,20 @@ export default {
         ...this.form
       };
       this.FETCH(params);
+    },
+
+    onSelectionChange (selection) {
+      this.selection = selection.map(ele => ele.id);
+    },
+
+    async handleDelete () {
+      if (this.selection) {
+        await this.DELETE(this.selection);
+        this.$message.success('删除成功！');
+        await this.fetch(1);
+      } else {
+        this.$message.info('请选择要删除的需求');
+      }
     },
 
     async handleToggle (id, is_show) {

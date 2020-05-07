@@ -8,3 +8,8 @@ export const STATUS_LIST = {
   1: '审核通过',
   2: '审核拒绝'
 }
+
+export const CREATE_BY_LIST = {
+  0: '用户发送',
+  1: '后台发送'
+}

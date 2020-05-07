@@ -6,7 +6,7 @@
       <div class="order-search">
         <div>
           <el-button type="primary" @click="handleDelete">删除</el-button>
-          <el-button type="primary" @click="handleEditPrice">会员价格</el-button>
+          <!-- <el-button type="primary" @click="handleEditPrice">会员价格</el-button> -->
           <el-button type="primary" @click="handleEditEquity">会员权益</el-button>
         </div>
         <div class="operate">

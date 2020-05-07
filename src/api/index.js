@@ -87,7 +87,7 @@ const onResponseError = (err) => {
 
 export const createAxios = () => {
   const config = {
-    baseURL: '/api', // http://rmq.duoge.work
+    baseURL: 'http://rmq.51wds.top/api', // http://rmq.duoge.work
     timeout: 5000,
     withCredentials: true
   };

@@ -145,7 +145,7 @@ export default {
 
     async handleVerity (type, row) {
       /* eslint-disable */
-      const { id, status, name = '-', time_create = '-', money = '0', time_update = '-', fail_reason = '-' } = row;
+      const { id, status, name = '-', time_create = '-', money = '0', time_finish = '-', fail_reason = '-' } = row;
       switch (type) {
         case STATUS_FORMAT.PASS:
           this.$confirm('您确定要通过吗?', '提示', {
@@ -175,10 +175,10 @@ export default {
           console.log(`详情（${status === 1 ? '已通过' : '已拒绝'}）`);
           this.$alert(`<div class="withdraw-info">
               <div><span>用户昵称：${name}</span><span>申请时间：${time_create}</span></div>
-              <div><span>提现金额：${money ? money / 100 : 0}</span><span>审核时间：${time_update}</span></div>
+              <div><span>提现金额：${money ? money / 100 : 0}</span><span>审核时间：${time_finish}</span></div>
               ${
                 status === 2 ? `<div>拒绝理由：</div>
-              <div>${fail_reason}</div>` : ''
+              <div>${fail_reason || '--'}</div>` : ''
               }
             </div>
           `, `详情（${status === 1 ? '已通过' : '已拒绝'}）`, {

@@ -42,7 +42,7 @@ export default {
       return api.edit(id, data);
     },
     DELETE ({ commit }, data) {
-      return api.del(data);
+      return api.del({ ids: data.join(',') });
     },
     AUDIT ({ commit }, { id, status }) {
       return api.audit(id, status);

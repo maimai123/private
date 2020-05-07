@@ -42,7 +42,7 @@
                 查看需求
               </router-link>
             </el-button>
-            <el-button size="small" type="text" @click="handleChange(scope.row.id)">
+            <el-button v-if="scope.row.type === 1" size="small" type="text" @click="handleChange(scope.row.id)">
               {{ scope.row.status === 0 ? '冻结' : '解冻' }}
             </el-button>
           </template>
