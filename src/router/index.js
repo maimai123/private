@@ -41,6 +41,23 @@ const routes = [
     component: () => import('@/views/forget')
   },
   {
+    path: '/about',
+    name: 'about',
+    component: () => import('@/views/about')
+  },
+  // 考勤校验test
+  {
+    path: '/attendance',
+    name: 'attendance',
+    component: () => import('@/views/attendance')
+  },
+  // trackingjs test
+  {
+    path: '/tracking',
+    name: 'tracking',
+    component: () => import('@/views/tracking')
+  },
+  {
     path: '*',
     name: '404',
     component: () => import('@/components/404')

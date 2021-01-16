@@ -20,7 +20,7 @@ const bar = new Vue(ProgressBar).$mount();
 document.body.appendChild(bar.$el);
 
 router.beforeEach(async (to, from, next) => {
-  if (!Object.keys(store.state.user.user).length && !['login', 'forget'].includes(to.name)) await store.dispatch('user/GET_USER');
+  if (!Object.keys(store.state.user.user).length && !['login', 'forget', 'about', 'attendance', 'tracking'].includes(to.name)) await store.dispatch('user/GET_USER');
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   if (requiresAuth && Object.keys(store.state.user.user).length === 0) {
     window.location.href = AUTH_URL;
